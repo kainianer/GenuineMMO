@@ -1,0 +1,7 @@
+name: GenuineMMO
+author: kainianer
+version: 1.0 Alpha
+main: de.kainianer.genuine.Main
+commands:
+    test:
+        description: test
