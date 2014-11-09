@@ -24,10 +24,18 @@
 package de.kainianer.genuine.events;
 
 import de.kainianer.genuine.Main;
-import de.kainianer.spell.FireBall;
+import de.kainianer.genuine.item.BonusSpell;
+import de.kainianer.genuine.item.Weapon;
+import de.kainianer.genuine.spell.FireBall;
+import de.kainianer.genuine.spell.IceLance;
+import de.kainianer.genuine.spell.LifeDrain;
+import de.kainianer.genuine.spell.Lift;
+import de.kainianer.genuine.util.SpellUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -50,10 +58,10 @@ public class onItemUse implements Listener {
 
                 if (stack.hasItemMeta()) {
                     if (stack.getItemMeta().hasDisplayName()) {
-                        if (stack.getItemMeta().getDisplayName().contains("Quiver")) {
+                        if (stack.getItemMeta().getDisplayName().contains("Köcher")) {
                             if (!Main.getInstance().getQuiverInventories().containsKey(event.getPlayer())) {
                                 Player player = event.getPlayer();
-                                Inventory inv = Bukkit.getServer().createInventory(player, 9, ChatColor.BLACK + "Quiver");
+                                Inventory inv = Bukkit.getServer().createInventory(player, 9, ChatColor.BLACK + "Köcher");
                                 player.openInventory(inv);
                                 event.setCancelled(true);
                             } else {
@@ -63,8 +71,27 @@ public class onItemUse implements Listener {
                     }
                 }
             } else if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-                if (stack.getItemMeta().hasDisplayName() && stack.getItemMeta().getDisplayName().contains("Wand") && stack.getType().equals(Material.BLAZE_ROD)) {
-                    FireBall.perform(event.getPlayer());
+                if (stack.getItemMeta().hasDisplayName() && Main.getInstance().getItemList().containsKey(stack.getItemMeta().getDisplayName()) && stack.getType().equals(Material.BLAZE_ROD)) {
+                    Weapon w = (Weapon) Main.getInstance().getItemList().get(stack.getItemMeta().getDisplayName());
+                    Player player = event.getPlayer();
+                    if (w.getBonusSpells().contains(BonusSpell.EISLANZE)) {
+                        IceLance.perform(player);
+                    }
+                    if (w.getBonusSpells().contains(BonusSpell.FEUERBALL)) {
+                        FireBall.perform(player);
+                    }
+                    if (w.getBonusSpells().contains(BonusSpell.SCHWUNG)) {
+                        Entity ent = SpellUtil.getTargetEntity(event.getPlayer());
+                        if (ent != null && ent instanceof LivingEntity) {
+                            Lift.perform(player, (LivingEntity) ent);
+                        }
+                    }
+                    if (w.getBonusSpells().contains(BonusSpell.AUSSAUGEN)) {
+                        Entity ent = SpellUtil.getTargetEntity(player);
+                        if (ent != null && ent instanceof LivingEntity) {
+                            LifeDrain.perform(player, (LivingEntity) ent);
+                        }
+                    }
                 }
             }
         }

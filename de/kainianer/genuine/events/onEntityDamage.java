@@ -23,8 +23,8 @@
  */
 package de.kainianer.genuine.events;
 
-import de.kainianer.ui.Hologram;
-import de.kainianer.ui.TargetBarManager;
+import de.kainianer.genuine.ui.Hologram;
+import de.kainianer.genuine.ui.TargetBarManager;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;

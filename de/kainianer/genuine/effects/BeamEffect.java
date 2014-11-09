@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2014 kainianer.
@@ -21,32 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.kainianer.genuine.events;
+package de.kainianer.genuine.effects;
 
-import de.kainianer.genuine.effects.LegendaryDropEffect;
 import de.kainianer.genuine.Main;
-import org.bukkit.ChatColor;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.ItemSpawnEvent;
+import de.slikey.effectlib.EffectManager;
+import de.slikey.effectlib.EffectType;
+import de.slikey.effectlib.effect.LineEffect;
+import de.slikey.effectlib.util.ParticleEffect;
+import org.bukkit.entity.Entity;
 
 /**
  *
  * @author kainianer
  */
-public class onItemSpawn implements Listener {
+public class BeamEffect extends CustomEffect {
 
-    @EventHandler
-    public void onItemSpawn(ItemSpawnEvent event) {
-        if (event.getEntity().getItemStack().hasItemMeta()) {
-            if (event.getEntity().getItemStack().getItemMeta().hasDisplayName()) {
-                if (event.getEntity().getItemStack().getItemMeta().getDisplayName().contains(ChatColor.GOLD + "" + ChatColor.BOLD)) {
-                    System.out.println("FUNZT");
-                    LegendaryDropEffect legendaryDropEffect = new LegendaryDropEffect(event.getEntity());
-                    Main.getInstance().getLegendaryOnGroundList().put(event.getEntity(), legendaryDropEffect);
-                }
-            }
-        }
+    public BeamEffect() {
+        super(new CustomLineEffect(new EffectManager(Main.getEffectLib())));
+        this.getEffect().type = EffectType.REPEATING;
     }
 
+    public void setTarget(Entity target) {
+        this.effect.setEntity(target);
+    }
+
+    @Override
+    public void setParticle(ParticleEffect particle) {
+        ((CustomLineEffect)this.getEffect()).particle = particle;
+    }
 }

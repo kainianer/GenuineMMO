@@ -21,32 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.kainianer.genuine.events;
+package de.kainianer.genuine.spell;
 
-import de.kainianer.genuine.effects.LegendaryDropEffect;
-import de.kainianer.genuine.Main;
-import org.bukkit.ChatColor;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.ItemSpawnEvent;
+import de.kainianer.genuine.item.BonusSpell;
+import org.bukkit.entity.Player;
 
 /**
  *
  * @author kainianer
  */
-public class onItemSpawn implements Listener {
+public abstract class Spell {
 
-    @EventHandler
-    public void onItemSpawn(ItemSpawnEvent event) {
-        if (event.getEntity().getItemStack().hasItemMeta()) {
-            if (event.getEntity().getItemStack().getItemMeta().hasDisplayName()) {
-                if (event.getEntity().getItemStack().getItemMeta().getDisplayName().contains(ChatColor.GOLD + "" + ChatColor.BOLD)) {
-                    System.out.println("FUNZT");
-                    LegendaryDropEffect legendaryDropEffect = new LegendaryDropEffect(event.getEntity());
-                    Main.getInstance().getLegendaryOnGroundList().put(event.getEntity(), legendaryDropEffect);
-                }
-            }
-        }
+    public static void removeHungerFromPlayer(Player player, BonusSpell spell) {
+        player.setFoodLevel(player.getFoodLevel() - spell.getHungerCost());
+    }
+
+    public static boolean canPerform(Player player, BonusSpell spell) {
+        return player.getFoodLevel() >= spell.getHungerCost();
     }
 
 }

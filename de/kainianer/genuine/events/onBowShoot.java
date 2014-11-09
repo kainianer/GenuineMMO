@@ -26,7 +26,9 @@ package de.kainianer.genuine.events;
 import de.kainianer.genuine.Main;
 import de.kainianer.genuine.item.BonusSpell;
 import de.kainianer.genuine.item.Weapon;
-import de.kainianer.spell.ClusterArrow;
+import de.kainianer.genuine.spell.ClusterArrow;
+import de.slikey.effectlib.util.VectorUtils;
+import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -49,12 +51,14 @@ public class onBowShoot implements Listener {
                     if (Main.getInstance().getItemList().containsKey(bow.getItemMeta().getDisplayName())) {
                         Weapon w = (Weapon) Main.getInstance().getItemList().get(bow.getItemMeta().getDisplayName());
                         Player player = (Player) event.getEntity();
-                        if (w.getBonusSpells().contains(BonusSpell.SPLITTERPFEIL) && BonusSpell.SPLITTERPFEIL.getHungerCost() >= player.getFoodLevel()) {
+                        System.out.println(w.getBonusSpells().contains(BonusSpell.SPLITTERPFEIL));
+                        if (w.getBonusSpells().contains(BonusSpell.SPLITTERPFEIL)) {
                             ClusterArrow.perform(player, (Arrow) event.getProjectile());
                         }
                     }
                 }
             }
+            ((Player) event.getEntity()).getInventory().addItem(new ItemStack(Material.ARROW, 1));
         }
     }
 }

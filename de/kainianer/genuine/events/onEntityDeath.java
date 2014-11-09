@@ -23,7 +23,7 @@
  */
 package de.kainianer.genuine.events;
 
-import de.kainianer.ui.TargetBarManager;
+import de.kainianer.genuine.ui.TargetBarManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;

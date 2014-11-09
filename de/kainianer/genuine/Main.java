@@ -23,7 +23,7 @@
  */
 package de.kainianer.genuine;
 
-import de.kainianer.effects.CustomEffect;
+import de.kainianer.genuine.effects.CustomEffect;
 import de.kainianer.genuine.commands.TestCommand;
 import de.kainianer.genuine.events.onEntityDamage;
 import de.kainianer.genuine.events.onEntityDeath;
@@ -38,19 +38,13 @@ import de.kainianer.genuine.events.onPlayerMove;
 import de.kainianer.genuine.events.onPlayerPickupItem;
 import de.kainianer.genuine.events.onBowShoot;
 import de.kainianer.genuine.events.onEntityDamageByEntity;
-import de.kainianer.genuine.item.BonusSpell;
 import de.kainianer.genuine.item.CustomItem;
-import de.kainianer.genuine.item.Rarity;
-import de.kainianer.genuine.item.Stat;
-import de.kainianer.genuine.item.Stat.StatType;
-import de.kainianer.genuine.item.Weapon;
-import de.kainianer.genuine.item.WeaponType;
-import de.kainianer.spell.SpellManager;
-import de.kainianer.ui.TargetBarManager;
+import de.kainianer.genuine.spell.SpellManager;
+import de.kainianer.genuine.ui.TargetBarManager;
+import de.kainianer.genuine.util.HungerManager;
+import de.kainianer.genuine.util.ItemLoader;
 import de.slikey.effectlib.EffectLib;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.bukkit.Bukkit;
@@ -74,10 +68,12 @@ public class Main extends JavaPlugin {
     private final Map<InventoryHolder, Inventory> quiverInventories = new HashMap<>();
     private final Map<UUID, WitherSkull> effectPassengers = new HashMap<>();
     private final Map<String, CustomItem> itemList = new HashMap<>();
+    private final HungerManager hungerManager;
 
     public Main() {
         this.targetBarManger = new TargetBarManager(this);
         this.spellManager = new SpellManager(this);
+        this.hungerManager = new HungerManager(this);
     }
 
     @Override
@@ -103,10 +99,14 @@ public class Main extends JavaPlugin {
 
         System.out.println("[GenuineMMO] Loading Items ...");
         //adding itemlist
-        List<Stat> statList = Arrays.asList(new Stat(StatType.SCHADEN, 94, false), new Stat(StatType.ZAUBERSCH, 15, true), new Stat(StatType.LEVEL, 75, false));
-        List<BonusSpell> bonuslist = Arrays.asList(BonusSpell.SPLITTERPFEIL, BonusSpell.GIFTPFEIL, BonusSpell.EXPLOSIVSCHUSS);
-        Weapon w = new Weapon(WeaponType.BOW, "Jochens überspannter Bogen", Rarity.LEGENDÄR, statList, bonuslist, "Irgendwann ging diese Waffe einmal verloren.");
-        this.itemList.put(w.getItemMeta().getDisplayName(), w);
+        /*List<Stat> statList = Arrays.asList(new Stat(StatType.SCHADEN, 94, false), new Stat(StatType.ZAUBERSCH, 15, true), new Stat(StatType.LEVEL, 75, false));
+         List<BonusSpell> bonuslist = Arrays.asList(BonusSpell.SPLITTERPFEIL, BonusSpell.GIFTPFEIL, BonusSpell.EXPLOSIVSCHUSS);
+         Weapon w = new Weapon(WeaponType.BOW, "Jochens überspannter Bogen", Rarity.LEGENDÄR, statList, bonuslist, "Irgendwann ging diese Waffe einmal verloren.");
+         this.itemList.put(w.getItemMeta().getDisplayName(), w);*/
+        ItemLoader loader = new ItemLoader();
+        for (CustomItem item : loader.getItems()) {
+            this.itemList.put(item.getItemMeta().getDisplayName(), item);
+        }
         System.out.println("[GenuineMMO] Items loaded");
 
         //adding commmands
@@ -129,6 +129,7 @@ public class Main extends JavaPlugin {
         }, 0, 20L);
 
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, spellManager, 0, 20);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, hungerManager, 0, 40);
 
         System.out.println("[GenuineMMO] Successfully enabled");
     }

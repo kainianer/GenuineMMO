@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2014 kainianer.
@@ -21,32 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.kainianer.genuine.events;
+package de.kainianer.genuine.classes;
 
-import de.kainianer.genuine.effects.LegendaryDropEffect;
-import de.kainianer.genuine.Main;
 import org.bukkit.ChatColor;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.ItemSpawnEvent;
 
 /**
  *
  * @author kainianer
  */
-public class onItemSpawn implements Listener {
+public enum MMOClass {
 
-    @EventHandler
-    public void onItemSpawn(ItemSpawnEvent event) {
-        if (event.getEntity().getItemStack().hasItemMeta()) {
-            if (event.getEntity().getItemStack().getItemMeta().hasDisplayName()) {
-                if (event.getEntity().getItemStack().getItemMeta().getDisplayName().contains(ChatColor.GOLD + "" + ChatColor.BOLD)) {
-                    System.out.println("FUNZT");
-                    LegendaryDropEffect legendaryDropEffect = new LegendaryDropEffect(event.getEntity());
-                    Main.getInstance().getLegendaryOnGroundList().put(event.getEntity(), legendaryDropEffect);
-                }
-            }
-        }
+    HUNTER(ChatColor.DARK_GREEN, "Schütze", "Jäger", "Drachentöter"),
+    WIZARD(ChatColor.LIGHT_PURPLE, "Novize", "Mönch", "Älstester"),
+    WARRIOR(ChatColor.BLUE, "Knappe","Ritter","Krieger");
+    
+    private final String rank1;
+    private final String rank2;
+    private final String rank3;
+    private final ChatColor color;
+    
+    private MMOClass(ChatColor color, String rank1, String rank2, String rank3) {
+        this.rank1 = rank1;
+        this.rank2 = rank2;
+        this.rank3 = rank3;
+        this.color = color;
     }
-
+    
+    public ChatColor getColor() {
+        return this.color;
+    }
+    
+    public String getRankOne() {
+        return this.color + this.rank1;
+    }
+    public String getRankTwo() {
+        return this.color + this.rank2;
+    }
+    public String getRankThree() {
+        return this.color + this.rank3;
+    }
 }

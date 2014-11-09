@@ -47,10 +47,10 @@ public class Stat {
     }
 
     private final StatType type;
-    private final int value;
+    private final double value;
     private final boolean percent;
 
-    public Stat(StatType type, int value, boolean percent) {
+    public Stat(StatType type, double value, boolean percent) {
         this.type = type;
         this.value = value;
         this.percent = percent;
@@ -72,7 +72,7 @@ public class Stat {
     /**
      * @return the value
      */
-    public int getValue() {
+    public double getValue() {
         return value;
     }
 

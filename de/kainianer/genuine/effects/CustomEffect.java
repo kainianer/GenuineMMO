@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2014 kainianer.
@@ -21,32 +21,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.kainianer.genuine.events;
+package de.kainianer.genuine.effects;
 
-import de.kainianer.genuine.effects.LegendaryDropEffect;
-import de.kainianer.genuine.Main;
-import org.bukkit.ChatColor;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.ItemSpawnEvent;
+import de.slikey.effectlib.Effect;
+import de.slikey.effectlib.util.ParticleEffect;
+import org.bukkit.entity.Entity;
 
 /**
  *
  * @author kainianer
  */
-public class onItemSpawn implements Listener {
+public abstract class CustomEffect {
 
-    @EventHandler
-    public void onItemSpawn(ItemSpawnEvent event) {
-        if (event.getEntity().getItemStack().hasItemMeta()) {
-            if (event.getEntity().getItemStack().getItemMeta().hasDisplayName()) {
-                if (event.getEntity().getItemStack().getItemMeta().getDisplayName().contains(ChatColor.GOLD + "" + ChatColor.BOLD)) {
-                    System.out.println("FUNZT");
-                    LegendaryDropEffect legendaryDropEffect = new LegendaryDropEffect(event.getEntity());
-                    Main.getInstance().getLegendaryOnGroundList().put(event.getEntity(), legendaryDropEffect);
-                }
-            }
+    public Effect effect;
+
+    public CustomEffect(Effect effect) {
+        this.effect = effect;
+    }
+
+    public void setSource(Entity source) {
+        this.effect.setEntity(source);
+    }
+
+    public void setDuration(double seconds) {
+        if (seconds == -1) {
+            this.effect.infinite();
+        } else {
+            this.effect.iterations = (int) (seconds * 20);
+            this.effect.period = 1;
         }
     }
+
+    public void cancel() {
+        this.effect.cancel();
+    }
+
+    public void startEffect() {
+        this.effect.start();
+    }
+
+    public Effect getEffect() {
+        return this.effect;
+    }
+
+    public abstract void setParticle(ParticleEffect particle);
 
 }

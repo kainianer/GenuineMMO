@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2014 kainianer.
@@ -21,32 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.kainianer.genuine.events;
+package de.kainianer.genuine.effects;
 
-import de.kainianer.genuine.effects.LegendaryDropEffect;
 import de.kainianer.genuine.Main;
-import org.bukkit.ChatColor;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.ItemSpawnEvent;
+import de.slikey.effectlib.EffectManager;
+import de.slikey.effectlib.effect.CircleEffect;
+import de.slikey.effectlib.util.ParticleEffect;
 
 /**
  *
  * @author kainianer
  */
-public class onItemSpawn implements Listener {
+public class OrbitEffect extends CustomEffect {
 
-    @EventHandler
-    public void onItemSpawn(ItemSpawnEvent event) {
-        if (event.getEntity().getItemStack().hasItemMeta()) {
-            if (event.getEntity().getItemStack().getItemMeta().hasDisplayName()) {
-                if (event.getEntity().getItemStack().getItemMeta().getDisplayName().contains(ChatColor.GOLD + "" + ChatColor.BOLD)) {
-                    System.out.println("FUNZT");
-                    LegendaryDropEffect legendaryDropEffect = new LegendaryDropEffect(event.getEntity());
-                    Main.getInstance().getLegendaryOnGroundList().put(event.getEntity(), legendaryDropEffect);
-                }
-            }
-        }
+    public OrbitEffect() {
+        super(new CircleEffect(new EffectManager(Main.getEffectLib())));
+        ((CircleEffect) this.getEffect()).radius = 1f;
+        ((CircleEffect) this.getEffect()).angularVelocityX = 0;
+        ((CircleEffect) this.getEffect()).angularVelocityZ = 0;
+        ((CircleEffect) this.getEffect()).particles = 1;
+        ((CircleEffect) this.getEffect()).angularVelocityY = 5;
     }
 
+    @Override
+    public void setParticle(ParticleEffect particle) {
+        ((CircleEffect) this.getEffect()).particle = particle;
+    }
 }

@@ -21,32 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.kainianer.genuine.events;
+package de.kainianer.genuine.effects;
 
-import de.kainianer.genuine.effects.LegendaryDropEffect;
-import de.kainianer.genuine.Main;
-import org.bukkit.ChatColor;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.ItemSpawnEvent;
+import java.util.HashMap;
+import java.util.Map;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  *
  * @author kainianer
  */
-public class onItemSpawn implements Listener {
+public final class EffectHandler {
 
-    @EventHandler
-    public void onItemSpawn(ItemSpawnEvent event) {
-        if (event.getEntity().getItemStack().hasItemMeta()) {
-            if (event.getEntity().getItemStack().getItemMeta().hasDisplayName()) {
-                if (event.getEntity().getItemStack().getItemMeta().getDisplayName().contains(ChatColor.GOLD + "" + ChatColor.BOLD)) {
-                    System.out.println("FUNZT");
-                    LegendaryDropEffect legendaryDropEffect = new LegendaryDropEffect(event.getEntity());
-                    Main.getInstance().getLegendaryOnGroundList().put(event.getEntity(), legendaryDropEffect);
-                }
-            }
-        }
+    private final Map<Integer, CustomEffect> effects = new HashMap<>();
+    private final JavaPlugin plugin;
+
+    public EffectHandler(JavaPlugin plugin) {
+        this.plugin = plugin;
     }
 
+    public void addEffect(CustomEffect effect) {
+        this.effects.put(this.effects.size() + 1, effect);
+    }
+
+    public Map<Integer, CustomEffect> getCustomEffects(CustomEffect effect) {
+        return this.effects;
+    }
+
+    public void cancelEffect(CustomEffect effect) {
+        CustomEffect ef = this.effects.remove(effect);
+        ef.cancel();
+    }
 }

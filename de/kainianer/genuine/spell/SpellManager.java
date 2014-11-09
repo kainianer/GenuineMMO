@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2014 kainianer.
@@ -21,32 +21,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.kainianer.genuine.events;
+package de.kainianer.genuine.spell;
 
-import de.kainianer.genuine.effects.LegendaryDropEffect;
 import de.kainianer.genuine.Main;
-import org.bukkit.ChatColor;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.ItemSpawnEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author kainianer
  */
-public class onItemSpawn implements Listener {
+public class SpellManager implements Runnable {
 
-    @EventHandler
-    public void onItemSpawn(ItemSpawnEvent event) {
-        if (event.getEntity().getItemStack().hasItemMeta()) {
-            if (event.getEntity().getItemStack().getItemMeta().hasDisplayName()) {
-                if (event.getEntity().getItemStack().getItemMeta().getDisplayName().contains(ChatColor.GOLD + "" + ChatColor.BOLD)) {
-                    System.out.println("FUNZT");
-                    LegendaryDropEffect legendaryDropEffect = new LegendaryDropEffect(event.getEntity());
-                    Main.getInstance().getLegendaryOnGroundList().put(event.getEntity(), legendaryDropEffect);
-                }
+    private final List<DurableSpell> durableSpellList = new ArrayList<>();
+    private final Main main;
+
+    public SpellManager(Main main) {
+        this.main = main;
+    }
+
+    public List<DurableSpell> getDurableSpellList() {
+        return this.durableSpellList;
+    }
+
+    @Override
+    public void run() {
+        List<DurableSpell> toRemove = new ArrayList<>();
+        for (DurableSpell spell : this.durableSpellList) {
+            if (spell.isExpired()) {
+                spell.cancel();
+                toRemove.add(spell);
+            } else {
+                spell.increaseLived();
             }
         }
+        this.durableSpellList.removeAll(toRemove);
+    }
+
+    public void addSpellToManager(DurableSpell spell) {
+        this.durableSpellList.add(spell);
+    }
+
+    public static void addSpell(DurableSpell spell) {
+        Main.getInstance().getSpellManager().addSpellToManager(spell);
     }
 
 }

@@ -26,7 +26,9 @@ package de.kainianer.genuine.events;
 import de.kainianer.genuine.Main;
 import de.kainianer.genuine.item.BonusSpell;
 import de.kainianer.genuine.item.Weapon;
-import de.kainianer.ui.TargetBarManager;
+import de.kainianer.genuine.spell.PoisonArrow;
+import de.kainianer.genuine.spell.Root;
+import de.kainianer.genuine.ui.TargetBarManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -36,8 +38,6 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 /**
  *
@@ -62,16 +62,16 @@ public class onEntityDamageByEntity implements Listener {
                                 if (w.getBonusSpells().contains(BonusSpell.EXPLOSIVSCHUSS)) {
                                     for (Entity ent : target.getNearbyEntities(2, 2, 2)) {
                                         if (ent instanceof LivingEntity) {
-                                            LivingEntity le = (LivingEntity) ent;
-                                            le.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 60, 1));
+                                            PoisonArrow.perform(player, (LivingEntity)ent);
                                         }
                                     }
-                                    target.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 60, 1));
                                 } else {
-                                    target.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 60, 1));
+                                    PoisonArrow.perform(player, target);
                                 }
                             }
-
+                            if(w.getBonusSpells().contains(BonusSpell.FESSELN)) {
+                                Root.perform(player, target.getLocation());
+                            }
                         }
                     }
                 }

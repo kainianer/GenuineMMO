@@ -23,7 +23,7 @@
  */
 package de.kainianer.genuine.events;
 
-import de.kainianer.effects.CustomEffect;
+import de.kainianer.genuine.effects.CustomEffect;
 import de.kainianer.genuine.Main;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

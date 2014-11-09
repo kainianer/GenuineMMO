@@ -23,7 +23,10 @@
  */
 package de.kainianer.genuine.commands;
 
-import de.kainianer.effects.OrbitEffect;
+import de.kainianer.genuine.Main;
+import de.kainianer.genuine.effects.OrbitEffect;
+import de.kainianer.genuine.item.CustomItem;
+import java.util.Map;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -45,6 +48,9 @@ public class TestCommand implements CommandExecutor {
             OrbitEffect effect = new OrbitEffect();
             effect.setSource(p);
             effect.startEffect();
+            for(Map.Entry<String, CustomItem> entry : Main.getInstance().getItemList().entrySet()) {
+                p.getInventory().addItem(entry.getValue());
+            }
         }
         return false;
     }
