@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -34,8 +35,7 @@ import org.bukkit.inventory.meta.ItemMeta;
  *
  * @author kainianer
  */
-public class CustomItem extends ItemStack {
-
+public class CustomItem extends ItemStack implements ConfigurationSerializable {
     private final List<Stat> stats;
     private final String name;
     private final Rarity rarity;

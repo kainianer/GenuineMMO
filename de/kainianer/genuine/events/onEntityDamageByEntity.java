@@ -24,11 +24,12 @@
 package de.kainianer.genuine.events;
 
 import de.kainianer.genuine.Main;
-import de.slikey.effectlib.EffectManager;
-import de.slikey.effectlib.EffectType;
-import de.slikey.effectlib.effect.LineEffect;
-import de.slikey.effectlib.util.ParticleEffect;
+import de.kainianer.genuine.item.BonusSpell;
+import de.kainianer.genuine.item.Weapon;
+import de.kainianer.ui.TargetBarManager;
+import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -47,29 +48,36 @@ public class onEntityDamageByEntity implements Listener {
     @EventHandler
     public void onEntityDamageLivingEntity(EntityDamageByEntityEvent event) {
         LivingEntity target = (LivingEntity) event.getEntity();
+
         if (event.getDamager() instanceof Projectile) {
             Projectile proj = (Projectile) event.getDamager();
-            if (proj instanceof Arrow) {
-                Arrow ar = (Arrow) proj;
-                if (ar.getShooter() instanceof Player) {
-                    Player player = (Player) ar.getShooter();
-                    if (!target.hasPotionEffect(PotionEffectType.WITHER)) {
-                        target.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 20 * 10, 1, true));
-                        EffectManager em = new EffectManager(Main.getEffectLib());
-                        LineEffect effect = new LineEffect(em);
-                        effect.type = EffectType.REPEATING;
-                        effect.particle = ParticleEffect.RED_DUST;
-                        effect.particles = 16;
-                        effect.period = 1;
-                        effect.iterations = 200;
-                        effect.setEntity(player);
-                        effect.setTargetEntity(target);
-                        effect.start();
-                    }
+            if (proj.getShooter() instanceof Player) {
+                Player player = (Player) proj.getShooter();
+                TargetBarManager.getInstance().setTargetOfPlayer(player, (LivingEntity) event.getEntity());
+                if (player.getItemInHand().getType() == Material.BOW && proj instanceof Arrow) {
+                    if (player.getItemInHand().getItemMeta().hasDisplayName()) {
+                        if (Main.getInstance().getItemList().containsKey(player.getItemInHand().getItemMeta().getDisplayName())) {
+                            Weapon w = (Weapon) Main.getInstance().getItemList().get(player.getItemInHand().getItemMeta().getDisplayName());
+                            if (w.getBonusSpells().contains(BonusSpell.GIFTPFEIL)) {
+                                if (w.getBonusSpells().contains(BonusSpell.EXPLOSIVSCHUSS)) {
+                                    for (Entity ent : target.getNearbyEntities(2, 2, 2)) {
+                                        if (ent instanceof LivingEntity) {
+                                            LivingEntity le = (LivingEntity) ent;
+                                            le.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 60, 1));
+                                        }
+                                    }
+                                    target.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 60, 1));
+                                } else {
+                                    target.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 60, 1));
+                                }
+                            }
 
+                        }
+                    }
                 }
             }
+        } else if (event.getDamager() instanceof Player) {
+            TargetBarManager.getInstance().setTargetOfPlayer((Player) event.getDamager(), (LivingEntity) event.getEntity());
         }
     }
-
 }

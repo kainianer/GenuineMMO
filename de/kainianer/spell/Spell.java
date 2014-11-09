@@ -23,10 +23,21 @@
  */
 package de.kainianer.spell;
 
+import de.kainianer.genuine.item.BonusSpell;
+import org.bukkit.entity.Player;
+
 /**
  *
  * @author kainianer
  */
-public class Spell {
-    
+public abstract class Spell {
+
+    public static void removeHungerFromPlayer(Player player, BonusSpell spell) {
+        player.setFoodLevel(player.getFoodLevel() - spell.getHungerCost());
+    }
+
+    public static boolean canPerform(Player player, BonusSpell spell) {
+        return player.getFoodLevel() >= spell.getHungerCost();
+    }
+
 }

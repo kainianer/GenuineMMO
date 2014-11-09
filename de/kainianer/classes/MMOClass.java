@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2014 kainianer.
@@ -21,30 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.kainianer.genuine.events;
+package de.kainianer.classes;
 
-import de.kainianer.ui.TargetBarManager;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.ChatColor;
 
 /**
  *
  * @author kainianer
  */
-public class onEntityDeath implements Listener {
+public enum MMOClass {
 
-    @EventHandler
-    public void onEntityDeath(EntityDeathEvent event) {
-        TargetBarManager.updateForEntity(event.getEntity(), 0);
-
-        /*
-         Weapon item = new Weapon(WeaponType.BOW, "Etrayu", Rarity.LEGENDÄR, Arrays.asList(new Stat(Stat.StatType.SCHADEN, 89, false), new Stat(Stat.StatType.ERFAHRUNG, 15, true), new Stat(Stat.StatType.LEBENSRAU, 2, false), new Stat(Stat.StatType.HUNGERREG, 2, false), new Stat(Stat.StatType.LEVEL, 65, false)), Arrays.asList(BonusSpell.FEUERPFEILE, BonusSpell.UNENDLICHKEIT), "Man sagt es gibt nur eine einzig wahre Waffe für jeden Helden.");
-         event.getDrops().clear();
-         event.getDrops().add(item);
-         
-         Hologram holo = new Hologram(2, ChatColor.GREEN + "+ " + event.getDroppedExp() + " EXP");
-         holo.show(event.getEntity().getLocation(), 30);
-         */
+    HUNTER(ChatColor.DARK_GREEN, "Schütze", "Jäger", "Drachentöter"),
+    WIZARD(ChatColor.LIGHT_PURPLE, "Novize", "Mönch", "Älstester"),
+    WARRIOR(ChatColor.BLUE, "Knappe","Ritter","Krieger");
+    
+    private final String rank1;
+    private final String rank2;
+    private final String rank3;
+    private final ChatColor color;
+    
+    private MMOClass(ChatColor color, String rank1, String rank2, String rank3) {
+        this.rank1 = rank1;
+        this.rank2 = rank2;
+        this.rank3 = rank3;
+        this.color = color;
+    }
+    
+    public ChatColor getColor() {
+        return this.color;
+    }
+    
+    public String getRankOne() {
+        return this.color + this.rank1;
+    }
+    public String getRankTwo() {
+        return this.color + this.rank2;
+    }
+    public String getRankThree() {
+        return this.color + this.rank3;
     }
 }

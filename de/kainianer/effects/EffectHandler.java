@@ -21,30 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.kainianer.genuine.events;
+package de.kainianer.effects;
 
-import de.kainianer.ui.TargetBarManager;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDeathEvent;
+import java.util.HashMap;
+import java.util.Map;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  *
  * @author kainianer
  */
-public class onEntityDeath implements Listener {
+public final class EffectHandler {
 
-    @EventHandler
-    public void onEntityDeath(EntityDeathEvent event) {
-        TargetBarManager.updateForEntity(event.getEntity(), 0);
+    private final Map<Integer, CustomEffect> effects = new HashMap<>();
+    private final JavaPlugin plugin;
 
-        /*
-         Weapon item = new Weapon(WeaponType.BOW, "Etrayu", Rarity.LEGENDÄR, Arrays.asList(new Stat(Stat.StatType.SCHADEN, 89, false), new Stat(Stat.StatType.ERFAHRUNG, 15, true), new Stat(Stat.StatType.LEBENSRAU, 2, false), new Stat(Stat.StatType.HUNGERREG, 2, false), new Stat(Stat.StatType.LEVEL, 65, false)), Arrays.asList(BonusSpell.FEUERPFEILE, BonusSpell.UNENDLICHKEIT), "Man sagt es gibt nur eine einzig wahre Waffe für jeden Helden.");
-         event.getDrops().clear();
-         event.getDrops().add(item);
-         
-         Hologram holo = new Hologram(2, ChatColor.GREEN + "+ " + event.getDroppedExp() + " EXP");
-         holo.show(event.getEntity().getLocation(), 30);
-         */
+    public EffectHandler(JavaPlugin plugin) {
+        this.plugin = plugin;
+    }
+
+    public void addEffect(CustomEffect effect) {
+        this.effects.put(this.effects.size() + 1, effect);
+    }
+
+    public Map<Integer, CustomEffect> getCustomEffects(CustomEffect effect) {
+        return this.effects;
+    }
+
+    public void cancelEffect(CustomEffect effect) {
+        CustomEffect ef = this.effects.remove(effect);
+        ef.cancel();
     }
 }

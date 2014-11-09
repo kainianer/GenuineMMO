@@ -23,17 +23,16 @@
  */
 package de.kainianer.genuine.events;
 
+import de.kainianer.genuine.Main;
 import de.kainianer.genuine.item.BonusSpell;
 import de.kainianer.genuine.item.Weapon;
-import de.slikey.effectlib.util.VectorUtils;
+import de.kainianer.spell.ClusterArrow;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.WitherSkull;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.projectiles.ProjectileSource;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -44,18 +43,18 @@ public class onBowShoot implements Listener {
     @EventHandler
     public void onBowShoot(EntityShootBowEvent event) {
         if (event.getEntity() instanceof Player) {
-            /* Player player = (Player) event.getEntity();
-             Projectile proj = (Projectile) event.getProjectile();
-             player.launchProjectile(Arrow.class, VectorUtils.rotateAroundAxisY(proj.getVelocity().clone(), -.01f));
-             player.launchProjectile(Arrow.class, VectorUtils.rotateAroundAxisY(proj.getVelocity().clone(), 0.1f));
-             WitherSkull skull = player.launchProjectile(WitherSkull.class);
-             skull.setShooter((ProjectileSource) player);
-             skull.setVelocity(player.getEyeLocation().getDirection().multiply(5));
-             skull.setYield(0f);
-             skull.setCharged(true);
-             skull.setFireTicks(0);
-             */
+            ItemStack bow = event.getBow();
+            if (bow.hasItemMeta()) {
+                if (bow.getItemMeta().hasDisplayName()) {
+                    if (Main.getInstance().getItemList().containsKey(bow.getItemMeta().getDisplayName())) {
+                        Weapon w = (Weapon) Main.getInstance().getItemList().get(bow.getItemMeta().getDisplayName());
+                        Player player = (Player) event.getEntity();
+                        if (w.getBonusSpells().contains(BonusSpell.SPLITTERPFEIL) && BonusSpell.SPLITTERPFEIL.getHungerCost() >= player.getFoodLevel()) {
+                            ClusterArrow.perform(player, (Arrow) event.getProjectile());
+                        }
+                    }
+                }
+            }
         }
     }
-
 }

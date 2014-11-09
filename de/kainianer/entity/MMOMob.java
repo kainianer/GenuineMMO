@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2014 kainianer.
@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.kainianer.drops;
+package de.kainianer.entity;
 
 /**
  *
  * @author kainianer
  */
-public class EnchantingBook {
+public class MMOMob {
     
 }

@@ -61,7 +61,7 @@ public final class Weapon extends CustomItem {
         if (this.getBonusSpells().size() > 0) {
             itemLore.add("");
             for (BonusSpell spell : this.getBonusSpells()) {
-                itemLore.add(ChatColor.RED + ">> " + spell.getName());
+                itemLore.add(ChatColor.RED + ">> " + spell.getName() + ChatColor.GRAY + ChatColor.ITALIC + " (" + spell.getHungerCost() + ")");
             }
         }
         if (!"".equals(this.getLore())) {
@@ -72,5 +72,13 @@ public final class Weapon extends CustomItem {
         }
         data.setLore(itemLore);
         this.setItemMeta(data);
+    }
+
+    public int getWholeHungerCost() {
+        int cost = 0;
+        for (BonusSpell spell : this.getBonusSpells()) {
+            cost += spell.getHungerCost();
+        }
+        return cost;
     }
 }

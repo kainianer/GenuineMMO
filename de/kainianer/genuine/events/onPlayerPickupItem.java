@@ -23,8 +23,8 @@
  */
 package de.kainianer.genuine.events;
 
+import de.kainianer.effects.CustomEffect;
 import de.kainianer.genuine.Main;
-import de.slikey.effectlib.EffectManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -38,9 +38,9 @@ public class onPlayerPickupItem implements Listener {
     @EventHandler
     public void onItemPickUp(PlayerPickupItemEvent event) {
         if (Main.getInstance().getLegendaryOnGroundList().containsKey(event.getItem())) {
-            EffectManager em = Main.getInstance().getLegendaryOnGroundList().get(event.getItem());
-            em.dispose();
-            Main.getEffectLib().getEffectManagers().remove(em);
+            CustomEffect effect = Main.getInstance().getLegendaryOnGroundList().get(event.getItem());
+            effect.cancel();
+            Main.getEffectLib().getEffectManagers().remove(effect);
         }
     }
 }

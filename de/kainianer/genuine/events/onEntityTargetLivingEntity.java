@@ -24,7 +24,6 @@
 package de.kainianer.genuine.events;
 
 import org.bukkit.Color;
-import org.bukkit.DyeColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

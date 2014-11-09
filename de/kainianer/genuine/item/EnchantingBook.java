@@ -21,30 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.kainianer.genuine.events;
+package de.kainianer.genuine.item;
 
-import de.kainianer.ui.TargetBarManager;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDeathEvent;
+import java.util.Arrays;
+import java.util.Random;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  *
  * @author kainianer
  */
-public class onEntityDeath implements Listener {
+public class EnchantingBook {
 
-    @EventHandler
-    public void onEntityDeath(EntityDeathEvent event) {
-        TargetBarManager.updateForEntity(event.getEntity(), 0);
+    private final ItemStack stack = new ItemStack(Material.ENCHANTED_BOOK);
+    private final String name = ChatColor.GREEN + "Fragment der alten Lehren";
+    private final BonusSpell spell;
 
-        /*
-         Weapon item = new Weapon(WeaponType.BOW, "Etrayu", Rarity.LEGENDÄR, Arrays.asList(new Stat(Stat.StatType.SCHADEN, 89, false), new Stat(Stat.StatType.ERFAHRUNG, 15, true), new Stat(Stat.StatType.LEBENSRAU, 2, false), new Stat(Stat.StatType.HUNGERREG, 2, false), new Stat(Stat.StatType.LEVEL, 65, false)), Arrays.asList(BonusSpell.FEUERPFEILE, BonusSpell.UNENDLICHKEIT), "Man sagt es gibt nur eine einzig wahre Waffe für jeden Helden.");
-         event.getDrops().clear();
-         event.getDrops().add(item);
-         
-         Hologram holo = new Hologram(2, ChatColor.GREEN + "+ " + event.getDroppedExp() + " EXP");
-         holo.show(event.getEntity().getLocation(), 30);
-         */
+    public EnchantingBook() {
+        this.spell = this.setRandomEnchant();
     }
+
+    public ItemStack getBook() {
+        ItemMeta meta = this.stack.getItemMeta();
+        meta.setDisplayName(this.name);
+        meta.setLore(Arrays.asList(ChatColor.GRAY + spell.getName() + ChatColor.ITALIC + " (" + spell.getHungerCost() + " Hunger)"));
+        this.stack.setItemMeta(meta);
+        return this.stack;
+    }
+
+    private BonusSpell setRandomEnchant() {
+        Random ran = new Random();
+        BonusSpell[] spells = BonusSpell.values();
+        return spells[ran.nextInt(spells.length)];
+    }
+
 }

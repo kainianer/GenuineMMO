@@ -43,15 +43,15 @@ public enum BonusSpell {
     ABSORB(WeaponType.WAND, 5),
     FEUERBALL(WeaponType.WAND, 1),
     EISLANZE(WeaponType.WAND, 1),
-    LEBENSRAUB(WeaponType.WAND, 3),
+    AUSSAUGEN(WeaponType.WAND, 3),
     SCHWUNG(WeaponType.WAND, 3),
     //Warrior
-    BLINDHEIT(WeaponType.WAND, 2),
-    RÜSTUNG(WeaponType.SPEAR, 2),
+    BLINDHEIT(WeaponType.SPEAR, 2),
+    VERWIRRUNG(WeaponType.SPEAR, 2),
     VERLANGSAMUNG(WeaponType.SPEAR, 2),
-    ZERFETZEN(WeaponType.SPEAR, 3),
-    RÜCKSTOß(WeaponType.SPEAR, 1),
-    WEAKNESS(WeaponType.SPEAR, 1);
+    LEBENSRAUB(WeaponType.SPEAR, 3),
+    RÜCKSTOß(WeaponType.SPEAR, 2),
+    SCHWÄCHE(WeaponType.SPEAR, 1);
 
     private final WeaponType type;
     private final int hunger;

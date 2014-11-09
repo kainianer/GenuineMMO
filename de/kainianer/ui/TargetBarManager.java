@@ -33,22 +33,28 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  *
  * @author kainianer
  */
-public class TargetBars {
+public class TargetBarManager {
 
     private final Map<LivingEntity, List<Player>> map = new HashMap<>();
     private final Map<LivingEntity, Long> toRemove = new HashMap<>();
+    private final JavaPlugin plugin;
 
-    public static void updateForEntity(LivingEntity ent, double damage) {
-        TargetBars.getInstance().updateBarsForEntity(ent, damage);
+    public TargetBarManager(JavaPlugin plugin) {
+        this.plugin = plugin;
     }
 
-    public static TargetBars getInstance() {
-        return ((Main) Bukkit.getPluginManager().getPlugin("GenuineMMO")).getTargetBars();
+    public static void updateForEntity(LivingEntity ent, double damage) {
+        TargetBarManager.getInstance().updateBarsForEntity(ent, damage);
+    }
+
+    public static TargetBarManager getInstance() {
+        return Main.getInstance().getTargetBars();
     }
 
     public LivingEntity getTargetOfPlayer(Player player) {
@@ -77,10 +83,10 @@ public class TargetBars {
             } else {
                 BarAPI.setMessage(p, name, 0f);
                 this.toRemove.put(entity, System.currentTimeMillis() + 20);
-                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Bukkit.getServer().getPluginManager().getPlugin("GenuineMMO"), new Runnable() {
+                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
                     @Override
                     public void run() {
-                        ((Main) Bukkit.getServer().getPluginManager().getPlugin("GenuineMMO")).getTargetBars().delayedRemove();
+                        Main.getInstance().getTargetBars().delayedRemove();
                     }
                 }, 20L);
             }
@@ -101,11 +107,9 @@ public class TargetBars {
             List<Player> list = new ArrayList<>();
             list.add(player);
             this.map.put(target, list);
-            System.out.println("Set target of player " + player.getName());
         }
     }
 
-    @SuppressWarnings("empty-statement")
     public void removePlayerOfTarget(Player player) {
         for (Map.Entry<LivingEntity, List<Player>> entry : this.map.entrySet()) {
             if (entry.getValue().contains(player)) {

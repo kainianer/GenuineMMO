@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2014 kainianer.
@@ -21,33 +21,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.kainianer.genuine.events;
+package de.kainianer.spell;
 
-import de.kainianer.ui.TargetBars;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import de.kainianer.genuine.Main;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author kainianer
  */
-public class onDamageByEntity implements Listener {
+public class SpellManager implements Runnable {
 
-    @EventHandler
-    public void onDamageByEntity(EntityDamageByEntityEvent event) {
-        if (event.getEntity() instanceof LivingEntity) {
-            if (event.getDamager() instanceof Projectile) {
-                if (((Projectile) event.getDamager()).getShooter() instanceof Player) {
-                    TargetBars.getInstance().setTargetOfPlayer(((Player) ((Projectile) event.getDamager()).getShooter()), (LivingEntity) event.getEntity());
-                }
-            } else if (event.getDamager() instanceof Player) {
-                TargetBars.getInstance().setTargetOfPlayer((Player) event.getDamager(), (LivingEntity) event.getEntity());
+    private final List<DurableSpell> durableSpellList = new ArrayList<>();
+    private final Main main;
+
+    public SpellManager(Main main) {
+        this.main = main;
+    }
+
+    public List<DurableSpell> getDurableSpellList() {
+        return this.durableSpellList;
+    }
+
+    @Override
+    public void run() {
+        List<DurableSpell> toRemove = new ArrayList<>();
+        for (DurableSpell spell : this.durableSpellList) {
+            if (spell.isExpired()) {
+                spell.cancel();
+                toRemove.add(spell);
+            } else {
+                spell.increaseLived();
             }
         }
+        this.durableSpellList.removeAll(toRemove);
+    }
+
+    public void addSpellToManager(DurableSpell spell) {
+        this.durableSpellList.add(spell);
+    }
+
+    public static void addSpell(DurableSpell spell) {
+        Main.getInstance().getSpellManager().addSpellToManager(spell);
     }
 
 }

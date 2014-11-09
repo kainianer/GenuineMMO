@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2014 kainianer.
@@ -21,30 +21,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.kainianer.genuine.events;
+package de.kainianer.effects;
 
-import de.kainianer.ui.TargetBarManager;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDeathEvent;
+import de.slikey.effectlib.Effect;
+import de.slikey.effectlib.util.ParticleEffect;
+import org.bukkit.entity.Entity;
 
 /**
  *
  * @author kainianer
  */
-public class onEntityDeath implements Listener {
+public abstract class CustomEffect {
 
-    @EventHandler
-    public void onEntityDeath(EntityDeathEvent event) {
-        TargetBarManager.updateForEntity(event.getEntity(), 0);
+    public Effect effect;
 
-        /*
-         Weapon item = new Weapon(WeaponType.BOW, "Etrayu", Rarity.LEGENDÄR, Arrays.asList(new Stat(Stat.StatType.SCHADEN, 89, false), new Stat(Stat.StatType.ERFAHRUNG, 15, true), new Stat(Stat.StatType.LEBENSRAU, 2, false), new Stat(Stat.StatType.HUNGERREG, 2, false), new Stat(Stat.StatType.LEVEL, 65, false)), Arrays.asList(BonusSpell.FEUERPFEILE, BonusSpell.UNENDLICHKEIT), "Man sagt es gibt nur eine einzig wahre Waffe für jeden Helden.");
-         event.getDrops().clear();
-         event.getDrops().add(item);
-         
-         Hologram holo = new Hologram(2, ChatColor.GREEN + "+ " + event.getDroppedExp() + " EXP");
-         holo.show(event.getEntity().getLocation(), 30);
-         */
+    public CustomEffect(Effect effect) {
+        this.effect = effect;
     }
+
+    public void setSource(Entity source) {
+        this.effect.setEntity(source);
+    }
+
+    public void setDuration(double seconds) {
+        if (seconds == -1) {
+            this.effect.infinite();
+        } else {
+            this.effect.iterations = (int) (seconds * 20);
+            this.effect.period = 1;
+        }
+    }
+
+    public void cancel() {
+        this.effect.cancel();
+    }
+
+    public void startEffect() {
+        this.effect.start();
+    }
+
+    public Effect getEffect() {
+        return this.effect;
+    }
+
+    public abstract void setParticle(ParticleEffect particle);
+
 }

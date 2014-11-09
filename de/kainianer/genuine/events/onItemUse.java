@@ -24,11 +24,14 @@
 package de.kainianer.genuine.events;
 
 import de.kainianer.genuine.Main;
+import de.kainianer.spell.FireBall;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -41,18 +44,27 @@ public class onItemUse implements Listener {
 
     @EventHandler
     public void onItemUse(PlayerInteractEvent event) {
-        ItemStack stack = event.getPlayer().getItemInHand();
-        if (stack.hasItemMeta()) {
-            if (stack.getItemMeta().hasDisplayName()) {
-                if (stack.getItemMeta().getDisplayName().contains("Quiver")) {
-                    if (!Main.getInstance().getQuiverInventories().containsKey(event.getPlayer())) {
-                        Player player = event.getPlayer();
-                        Inventory inv = Bukkit.getServer().createInventory(player, 9, ChatColor.BLACK + "Quiver");
-                        player.openInventory(inv);
-                        event.setCancelled(true);
-                    } else {
-                        event.getPlayer().openInventory(Main.getInstance().getQuiverInventories().get(event.getPlayer()));
+        if (!event.getPlayer().getItemInHand().getType().equals(Material.AIR)) {
+            ItemStack stack = event.getPlayer().getItemInHand();
+            if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+
+                if (stack.hasItemMeta()) {
+                    if (stack.getItemMeta().hasDisplayName()) {
+                        if (stack.getItemMeta().getDisplayName().contains("Quiver")) {
+                            if (!Main.getInstance().getQuiverInventories().containsKey(event.getPlayer())) {
+                                Player player = event.getPlayer();
+                                Inventory inv = Bukkit.getServer().createInventory(player, 9, ChatColor.BLACK + "Quiver");
+                                player.openInventory(inv);
+                                event.setCancelled(true);
+                            } else {
+                                event.getPlayer().openInventory(Main.getInstance().getQuiverInventories().get(event.getPlayer()));
+                            }
+                        }
                     }
+                }
+            } else if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
+                if (stack.getItemMeta().hasDisplayName() && stack.getItemMeta().getDisplayName().contains("Wand") && stack.getType().equals(Material.BLAZE_ROD)) {
+                    FireBall.perform(event.getPlayer());
                 }
             }
         }

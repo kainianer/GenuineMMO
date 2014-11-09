@@ -23,8 +23,8 @@
  */
 package de.kainianer.genuine;
 
+import de.kainianer.effects.CustomEffect;
 import de.kainianer.genuine.commands.TestCommand;
-import de.kainianer.genuine.events.onDamageByEntity;
 import de.kainianer.genuine.events.onEntityDamage;
 import de.kainianer.genuine.events.onEntityDeath;
 import de.kainianer.genuine.events.onEntityTarget;
@@ -38,10 +38,19 @@ import de.kainianer.genuine.events.onPlayerMove;
 import de.kainianer.genuine.events.onPlayerPickupItem;
 import de.kainianer.genuine.events.onBowShoot;
 import de.kainianer.genuine.events.onEntityDamageByEntity;
-import de.kainianer.ui.TargetBars;
+import de.kainianer.genuine.item.BonusSpell;
+import de.kainianer.genuine.item.CustomItem;
+import de.kainianer.genuine.item.Rarity;
+import de.kainianer.genuine.item.Stat;
+import de.kainianer.genuine.item.Stat.StatType;
+import de.kainianer.genuine.item.Weapon;
+import de.kainianer.genuine.item.WeaponType;
+import de.kainianer.spell.SpellManager;
+import de.kainianer.ui.TargetBarManager;
 import de.slikey.effectlib.EffectLib;
-import de.slikey.effectlib.EffectManager;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.bukkit.Bukkit;
@@ -59,16 +68,24 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
 
-    private final TargetBars targetBars = new TargetBars();
-    private final Map<Item, EffectManager> legendaryOnGroundList = new HashMap<>();
+    private final TargetBarManager targetBarManger;
+    private final SpellManager spellManager;
+    private final Map<Item, CustomEffect> legendaryOnGroundList = new HashMap<>();
     private final Map<InventoryHolder, Inventory> quiverInventories = new HashMap<>();
     private final Map<UUID, WitherSkull> effectPassengers = new HashMap<>();
-    
+    private final Map<String, CustomItem> itemList = new HashMap<>();
+
+    public Main() {
+        this.targetBarManger = new TargetBarManager(this);
+        this.spellManager = new SpellManager(this);
+    }
+
     @Override
     public void onEnable() {
 
+        System.out.println("[GenuineMMO] Loading events ...");
+        //loading events
         PluginManager pm = this.getServer().getPluginManager();
-        pm.registerEvents(new onDamageByEntity(), this);
         pm.registerEvents(new onEntityDamage(), this);
         pm.registerEvents(new onEntityDeath(), this);
         pm.registerEvents(new onJoin(), this);
@@ -82,7 +99,17 @@ public class Main extends JavaPlugin {
         pm.registerEvents(new onInventoryClick(), this);
         pm.registerEvents(new onBowShoot(), this);
         pm.registerEvents(new onEntityDamageByEntity(), this);
+        System.out.println("[GenuineMMO] Events loaded");
 
+        System.out.println("[GenuineMMO] Loading Items ...");
+        //adding itemlist
+        List<Stat> statList = Arrays.asList(new Stat(StatType.SCHADEN, 94, false), new Stat(StatType.ZAUBERSCH, 15, true), new Stat(StatType.LEVEL, 75, false));
+        List<BonusSpell> bonuslist = Arrays.asList(BonusSpell.SPLITTERPFEIL, BonusSpell.GIFTPFEIL, BonusSpell.EXPLOSIVSCHUSS);
+        Weapon w = new Weapon(WeaponType.BOW, "Jochens überspannter Bogen", Rarity.LEGENDÄR, statList, bonuslist, "Irgendwann ging diese Waffe einmal verloren.");
+        this.itemList.put(w.getItemMeta().getDisplayName(), w);
+        System.out.println("[GenuineMMO] Items loaded");
+
+        //adding commmands
         this.getCommand("test").setExecutor(new TestCommand());
 
         //updating names
@@ -101,6 +128,8 @@ public class Main extends JavaPlugin {
             }
         }, 0, 20L);
 
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, spellManager, 0, 20);
+
         System.out.println("[GenuineMMO] Successfully enabled");
     }
 
@@ -109,18 +138,18 @@ public class Main extends JavaPlugin {
         System.out.println("[GenuineMMO] Successfully disabled!");
     }
 
-    public TargetBars getTargetBars() {
-        return this.targetBars;
+    public TargetBarManager getTargetBars() {
+        return this.targetBarManger;
     }
 
     public Map<InventoryHolder, Inventory> getQuiverInventories() {
         return this.quiverInventories;
     }
 
-    public Map<Item, EffectManager> getLegendaryOnGroundList() {
+    public Map<Item, CustomEffect> getLegendaryOnGroundList() {
         return this.legendaryOnGroundList;
     }
-    
+
     public Map<UUID, WitherSkull> getEffectPassengers() {
         return this.effectPassengers;
     }
@@ -131,6 +160,14 @@ public class Main extends JavaPlugin {
 
     public static Main getInstance() {
         return (Main) Bukkit.getPluginManager().getPlugin("GenuineMMO");
+    }
+
+    public Map<String, CustomItem> getItemList() {
+        return this.itemList;
+    }
+
+    public SpellManager getSpellManager() {
+        return this.spellManager;
     }
 
 }

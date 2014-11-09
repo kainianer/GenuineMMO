@@ -41,6 +41,7 @@ public class Stat {
         LEBENSRAU,
         RÜSTUNG,
         ERFAHRUNG,
+        LEBEN,
         LEVEL;
 
     }

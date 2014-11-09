@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2014 kainianer.
@@ -21,30 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.kainianer.genuine.events;
+package de.kainianer.effects;
 
-import de.kainianer.ui.TargetBarManager;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDeathEvent;
+import de.kainianer.genuine.Main;
+import de.slikey.effectlib.EffectManager;
+import de.slikey.effectlib.effect.CircleEffect;
+import de.slikey.effectlib.util.ParticleEffect;
 
 /**
  *
  * @author kainianer
  */
-public class onEntityDeath implements Listener {
+public class OrbitEffect extends CustomEffect {
 
-    @EventHandler
-    public void onEntityDeath(EntityDeathEvent event) {
-        TargetBarManager.updateForEntity(event.getEntity(), 0);
+    public OrbitEffect() {
+        super(new CircleEffect(new EffectManager(Main.getEffectLib())));
+        ((CircleEffect) this.getEffect()).radius = 1f;
+        ((CircleEffect) this.getEffect()).angularVelocityX = 0;
+        ((CircleEffect) this.getEffect()).angularVelocityZ = 0;
+        ((CircleEffect) this.getEffect()).particles = 1;
+        ((CircleEffect) this.getEffect()).angularVelocityY = 5;
+    }
 
-        /*
-         Weapon item = new Weapon(WeaponType.BOW, "Etrayu", Rarity.LEGENDÄR, Arrays.asList(new Stat(Stat.StatType.SCHADEN, 89, false), new Stat(Stat.StatType.ERFAHRUNG, 15, true), new Stat(Stat.StatType.LEBENSRAU, 2, false), new Stat(Stat.StatType.HUNGERREG, 2, false), new Stat(Stat.StatType.LEVEL, 65, false)), Arrays.asList(BonusSpell.FEUERPFEILE, BonusSpell.UNENDLICHKEIT), "Man sagt es gibt nur eine einzig wahre Waffe für jeden Helden.");
-         event.getDrops().clear();
-         event.getDrops().add(item);
-         
-         Hologram holo = new Hologram(2, ChatColor.GREEN + "+ " + event.getDroppedExp() + " EXP");
-         holo.show(event.getEntity().getLocation(), 30);
-         */
+    @Override
+    public void setParticle(ParticleEffect particle) {
+        ((CircleEffect) this.getEffect()).particle = particle;
     }
 }
