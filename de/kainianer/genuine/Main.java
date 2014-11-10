@@ -39,8 +39,9 @@ import de.kainianer.genuine.events.onPlayerPickupItem;
 import de.kainianer.genuine.events.onBowShoot;
 import de.kainianer.genuine.events.onEntityDamageByEntity;
 import de.kainianer.genuine.item.CustomItem;
+import de.kainianer.genuine.region.RegionManager;
 import de.kainianer.genuine.spell.SpellManager;
-import de.kainianer.genuine.ui.TargetBarManager;
+import de.kainianer.genuine.util.TargetBarManager;
 import de.kainianer.genuine.util.HungerManager;
 import de.kainianer.genuine.util.ItemLoader;
 import de.slikey.effectlib.EffectLib;
@@ -69,18 +70,20 @@ public class Main extends JavaPlugin {
     private final Map<UUID, WitherSkull> effectPassengers = new HashMap<>();
     private final Map<String, CustomItem> itemList = new HashMap<>();
     private final HungerManager hungerManager;
+    private final RegionManager regionManager;
 
     public Main() {
         this.targetBarManger = new TargetBarManager(this);
         this.spellManager = new SpellManager(this);
         this.hungerManager = new HungerManager(this);
+        this.regionManager = new RegionManager();
     }
 
     @Override
     public void onEnable() {
 
-        System.out.println("[GenuineMMO] Loading events ...");
         //loading events
+        System.out.println("[GenuineMMO] Loading events ...");
         PluginManager pm = this.getServer().getPluginManager();
         pm.registerEvents(new onEntityDamage(), this);
         pm.registerEvents(new onEntityDeath(), this);
@@ -97,12 +100,8 @@ public class Main extends JavaPlugin {
         pm.registerEvents(new onEntityDamageByEntity(), this);
         System.out.println("[GenuineMMO] Events loaded");
 
+        //loading items
         System.out.println("[GenuineMMO] Loading Items ...");
-        //adding itemlist
-        /*List<Stat> statList = Arrays.asList(new Stat(StatType.SCHADEN, 94, false), new Stat(StatType.ZAUBERSCH, 15, true), new Stat(StatType.LEVEL, 75, false));
-         List<BonusSpell> bonuslist = Arrays.asList(BonusSpell.SPLITTERPFEIL, BonusSpell.GIFTPFEIL, BonusSpell.EXPLOSIVSCHUSS);
-         Weapon w = new Weapon(WeaponType.BOW, "Jochens überspannter Bogen", Rarity.LEGENDÄR, statList, bonuslist, "Irgendwann ging diese Waffe einmal verloren.");
-         this.itemList.put(w.getItemMeta().getDisplayName(), w);*/
         ItemLoader loader = new ItemLoader();
         for (CustomItem item : loader.getItems()) {
             this.itemList.put(item.getItemMeta().getDisplayName(), item);
@@ -111,7 +110,7 @@ public class Main extends JavaPlugin {
 
         //adding commmands
         this.getCommand("test").setExecutor(new TestCommand());
-
+        
         //updating names
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
@@ -127,9 +126,11 @@ public class Main extends JavaPlugin {
                 }
             }
         }, 0, 20L);
-
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, spellManager, 0, 20);
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, hungerManager, 0, 40);
+        System.out.println("[GenuineMMO] Loading managers ...");
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, this.spellManager, 0, 20);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, this.hungerManager, 0, 40);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, this.regionManager, 0, 200);
+        System.out.println("[GenuineMMO] Managers loaded");
 
         System.out.println("[GenuineMMO] Successfully enabled");
     }

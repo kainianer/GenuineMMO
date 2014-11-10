@@ -3,7 +3,7 @@ author: kainianer
 webseite: http://www.kainaner.com
 version: 1.0 Alpha
 main: de.kainianer.genuine.Main
-depend: [EffectLib, BarAPI, HoloAPI, WorldGuard, WGRegionEvents]
+depend: [WorldGuard]
 commands:
     test:
         description: test

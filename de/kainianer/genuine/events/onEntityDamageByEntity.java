@@ -28,7 +28,7 @@ import de.kainianer.genuine.item.BonusSpell;
 import de.kainianer.genuine.item.Weapon;
 import de.kainianer.genuine.spell.PoisonArrow;
 import de.kainianer.genuine.spell.Root;
-import de.kainianer.genuine.ui.TargetBarManager;
+import de.kainianer.genuine.util.TargetBarManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;

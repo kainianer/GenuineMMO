@@ -27,7 +27,6 @@ import de.kainianer.genuine.effects.CustomLineEffect;
 import de.kainianer.genuine.Main;
 import de.kainianer.genuine.item.BonusSpell;
 import de.slikey.effectlib.EffectManager;
-import de.slikey.effectlib.effect.LineEffect;
 import de.slikey.effectlib.util.ParticleEffect;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -48,6 +47,7 @@ public class LifeDrain extends DurableSpell {
         this.player = player;
         effect = new CustomLineEffect(new EffectManager(Main.getEffectLib()));
         effect.particle = ParticleEffect.RED_DUST;
+        effect.locationUpdateInterval = 1;
         effect.particles = 16;
         effect.setYOff(-0.5f);
         effect.infinite();

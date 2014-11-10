@@ -37,7 +37,7 @@ public class PoisonArrow extends Spell {
 
     public static void perform(Player player, LivingEntity ent) {
         if (Spell.canPerform(player, BonusSpell.GIFTPFEIL)) {
-            ent.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 40, 1));
+            ent.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 80, 1));
             Spell.removeHungerFromPlayer(player, BonusSpell.GIFTPFEIL);
         }
     }
