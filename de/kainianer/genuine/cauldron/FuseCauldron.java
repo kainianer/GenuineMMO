@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.kainianer.cauldron;
+package de.kainianer.genuine.cauldron;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

@@ -23,7 +23,7 @@
  */
 package de.kainianer.genuine.events;
 
-import de.kainianer.cauldron.FuseCauldron;
+import de.kainianer.genuine.cauldron.FuseCauldron;
 import de.kainianer.genuine.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
