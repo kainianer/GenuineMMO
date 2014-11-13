@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2014 kainianer.
@@ -21,25 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.kainianer.genuine.events;
+package de.kainianer.cauldron;
 
-import de.kainianer.genuine.MainMMO;
-import de.kainianer.genuine.entity.MMOPlayer;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import java.util.ArrayList;
+import java.util.List;
+import org.bukkit.Location;
 
 /**
  *
  * @author kainianer
  */
-public class onJoin implements Listener {
-
-    @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        MainMMO.getInstance().getPlayers().put(event.getPlayer().getUniqueId(), new MMOPlayer(event.getPlayer()));
-        MMOPlayer p = MMOPlayer.wrapPlayer(event.getPlayer());
-        p.updateMaxHelath();
+public class CauldronManager {
+    
+    private final List<Location> locationList;
+    
+    public CauldronManager() {
+        this.locationList = new ArrayList<>();
     }
-
+    
+    public List<Location> getCauldronLocations() {
+        return this.locationList;
+    }
+    
+    public void addCauldron(FuseCauldron cauldron) {
+        this.locationList.add(cauldron.getLocation());
+    }
+    
 }

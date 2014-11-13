@@ -23,15 +23,13 @@
  */
 package de.kainianer.genuine.commands;
 
-import de.kainianer.genuine.Main;
-import de.kainianer.genuine.effects.OrbitEffect;
+import de.kainianer.genuine.MainMMO;
 import de.kainianer.genuine.item.CustomItem;
+import de.kainianer.genuine.util.GhostFactory;
 import java.util.Map;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
 import org.bukkit.entity.Player;
 
 /**
@@ -44,11 +42,9 @@ public class TestCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (sender instanceof Player) {
             Player p = (Player) sender;
-            World world = ((CraftWorld) p.getLocation().getWorld()).getHandle().getWorld();
-            OrbitEffect effect = new OrbitEffect();
-            effect.setSource(p);
-            effect.startEffect();
-            for(Map.Entry<String, CustomItem> entry : Main.getInstance().getItemList().entrySet()) {
+            GhostFactory fac = new GhostFactory(MainMMO.getInstance());
+            fac.setGhost(p, true);
+            for(Map.Entry<String, CustomItem> entry : MainMMO.getInstance().getItemList().entrySet()) {
                 p.getInventory().addItem(entry.getValue());
             }
         }

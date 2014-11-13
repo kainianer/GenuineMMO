@@ -24,7 +24,10 @@
 package de.kainianer.genuine.spell;
 
 import de.kainianer.genuine.item.BonusSpell;
+import de.kainianer.genuine.util.TargetBarManager;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 /**
@@ -33,9 +36,24 @@ import org.bukkit.entity.Player;
  */
 public class ExplosiveArrow extends Spell {
 
-    public static void perform(Player p, Location loc) {
+    private ExplosiveArrow(Player player) {
+        super(player);
+    }
+
+    public static void perform(Player p, double damage, LivingEntity entity) {
         if (Spell.canPerform(p, BonusSpell.EXPLOSIVSCHUSS)) {
-            loc.getWorld().createExplosion(loc.getX(), loc.getY(), loc.getZ(), 4f, false, false);
+            Location loc = entity.getLocation();
+            loc.getWorld().createExplosion(loc.getX(), loc.getY(), loc.getZ(), 2f, false, false);
+            for (Entity e : entity.getNearbyEntities(2f, 2f, 2f)) {
+                if (!(e instanceof LivingEntity) || e instanceof Player) {
+                    continue;
+                }
+                LivingEntity ent = (LivingEntity) e;
+                ent.damage(damage);
+                TargetBarManager.updateForEntity(ent, damage);
+            }
+            entity.damage(damage);
+            TargetBarManager.updateForEntity(entity, damage);
             Spell.removeHungerFromPlayer(p, BonusSpell.EXPLOSIVSCHUSS);
         }
     }

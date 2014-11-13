@@ -23,14 +23,12 @@
  */
 package de.kainianer.genuine.events;
 
-import de.kainianer.genuine.util.Hologram;
 import de.kainianer.genuine.util.TargetBarManager;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 /**
  *
@@ -40,13 +38,10 @@ public class onEntityDamage implements Listener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
-        if (event.getEntity() instanceof LivingEntity) {
+        if ((event.getCause() != DamageCause.PROJECTILE)) {
             TargetBarManager.updateForEntity((LivingEntity) event.getEntity(), event.getFinalDamage());
-
-            if (!(event.getEntity() instanceof Player)) {
-                Hologram holo = new Hologram(1.8f, ChatColor.RED + "- " + (int) event.getFinalDamage());
-                holo.show(event.getEntity().getLocation(), 10);
-            }
+        } else {
+            event.setDamage(0d);
         }
     }
 }

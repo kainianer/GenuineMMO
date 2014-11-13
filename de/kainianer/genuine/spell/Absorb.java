@@ -23,10 +23,16 @@
  */
 package de.kainianer.genuine.spell;
 
+import org.bukkit.entity.Player;
+
 /**
  *
  * @author kainianer
  */
 public class Absorb extends Spell {
+
+    private Absorb(Player player) {
+        super(player);
+    }
 
 }

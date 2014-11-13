@@ -21,49 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.kainianer.genuine.spell;
-
-import de.kainianer.genuine.Main;
-import java.util.ArrayList;
-import java.util.List;
+package de.kainianer.genuine.util;
 
 /**
  *
  * @author kainianer
  */
-public class SpellManager implements Runnable {
-
-    private final List<DurableSpell> durableSpellList = new ArrayList<>();
-    private final Main main;
-
-    public SpellManager(Main main) {
-        this.main = main;
-    }
-
-    public List<DurableSpell> getDurableSpellList() {
-        return this.durableSpellList;
-    }
-
-    @Override
-    public void run() {
-        List<DurableSpell> toRemove = new ArrayList<>();
-        for (DurableSpell spell : this.durableSpellList) {
-            if (spell.isExpired()) {
-                spell.cancel();
-                toRemove.add(spell);
-            } else {
-                spell.increaseLived();
-            }
-        }
-        this.durableSpellList.removeAll(toRemove);
-    }
-
-    public void addSpellToManager(DurableSpell spell) {
-        this.durableSpellList.add(spell);
-    }
-
-    public static void addSpell(DurableSpell spell) {
-        Main.getInstance().getSpellManager().addSpellToManager(spell);
-    }
-
+public class QuiverManager {
+    
 }

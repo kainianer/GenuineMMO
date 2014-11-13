@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2014 kainianer.
@@ -21,25 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.kainianer.genuine.events;
+package de.kainianer.genuine.item;
 
-import de.kainianer.genuine.MainMMO;
-import de.kainianer.genuine.entity.MMOPlayer;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.inventory.meta.ItemMeta;
 
 /**
  *
  * @author kainianer
  */
-public class onJoin implements Listener {
+public class Gem extends CustomItem {
 
-    @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        MainMMO.getInstance().getPlayers().put(event.getPlayer().getUniqueId(), new MMOPlayer(event.getPlayer()));
-        MMOPlayer p = MMOPlayer.wrapPlayer(event.getPlayer());
-        p.updateMaxHelath();
+    private final BonusSpell spell;
+
+    public Gem(Material mat, String name, BonusSpell spell) {
+        super(mat, name, Rarity.EPISCH, new ArrayList<Stat>(), "");
+        this.spell = spell;
+        this.createItemMeta();
+    }
+
+    public BonusSpell getBonusSpell() {
+        return this.spell;
+    }
+
+    @Override
+    public void createItemMeta() {
+        ItemMeta data = this.getItemMeta();
+        List<String> itemLore = new ArrayList<>();
+        data.setDisplayName(this.getRarity().getChatColor() + "" + ChatColor.BOLD + this.getName());
+        itemLore.add(ChatColor.GRAY + this.getRarity().getName());
+        itemLore.add("");
+        itemLore.add(ChatColor.RED + this.spell.getName() + ChatColor.GRAY + "(" + this.spell.getHungerCost() + ")");
+        data.setLore(itemLore);
+        this.setItemMeta(data);
     }
 
 }

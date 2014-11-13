@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.kainianer.genuine.region;
+package de.kainianer.genuine.util;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -32,8 +32,11 @@ import java.util.List;
 import java.util.Map;
 import net.minecraft.util.org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Zombie;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -70,14 +73,13 @@ public class RegionManager implements Runnable {
     public void run() {
         if (!this.init) {
             this.init();
-        }
-        int spawned = 0;
+        } 
+       int spawned = 0;
         int max = 0;
         int are = 0;
         for (World world : this.regions.keySet()) {
             List<ProtectedRegion> list = this.regions.get(world);
             for (ProtectedRegion region : list) {
-                System.out.println(region.getId());
                 int size = RegionUtil.getEntitiesInRegion(region, world).size();
                 int maxSize = (int)(RegionUtil.getRegionArea(region) * 0.025);
                 max = maxSize;
@@ -90,11 +92,20 @@ public class RegionManager implements Runnable {
                 }
             }
         }
-        System.out.println("Spawned " + spawned + " entities (" + are + "/" + max + ")");
     }
 
     private void spawn(ProtectedRegion region, World world) {
-        world.spawn(RegionUtil.getRandomLocationInRegion(region, world), Zombie.class);
+        Zombie z = world.spawn(RegionUtil.getRandomLocationInRegion(region, world), Zombie.class);
+        z.setMaxHealth(100d);
+        z.setHealth(100d);
+        z.setBaby(false);
+        z.setCustomName(ChatColor.GOLD + "Zombie" + ChatColor.GREEN + " [14]");
+        z.setCustomNameVisible(true);
+        z.getEquipment().setBoots(new ItemStack(Material.IRON_BOOTS));
+        z.getEquipment().setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
+        z.getEquipment().setLeggings(new ItemStack(Material.IRON_LEGGINGS));
+        z.getEquipment().setHelmet(new ItemStack(Material.IRON_HELMET));
+        z.getEquipment().setItemInHand(new ItemStack(Material.IRON_SWORD));
     }
 
 }

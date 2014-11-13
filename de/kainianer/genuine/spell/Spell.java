@@ -23,6 +23,7 @@
  */
 package de.kainianer.genuine.spell;
 
+import de.kainianer.genuine.entity.MMOPlayer;
 import de.kainianer.genuine.item.BonusSpell;
 import org.bukkit.entity.Player;
 
@@ -32,12 +33,22 @@ import org.bukkit.entity.Player;
  */
 public abstract class Spell {
 
+    private final MMOPlayer player;
+
+    public Spell(Player player) {
+        this.player = MMOPlayer.wrapPlayer(player);
+    }
+
     public static void removeHungerFromPlayer(Player player, BonusSpell spell) {
         player.setFoodLevel(player.getFoodLevel() - spell.getHungerCost());
     }
 
     public static boolean canPerform(Player player, BonusSpell spell) {
         return player.getFoodLevel() >= spell.getHungerCost();
+    }
+
+    public double getMultiplier() {
+        return this.player.getBonusDamage();
     }
 
 }

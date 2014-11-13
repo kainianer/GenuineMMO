@@ -31,6 +31,10 @@ import org.bukkit.entity.Player;
  */
 public class Confusion extends Spell {
 
+    private Confusion(Player player) {
+        super(player);
+    }
+
     public static void perform(Player player, Player target) {
         ConcussiveShot.perform(player, target);
     }

@@ -33,6 +33,10 @@ import org.bukkit.entity.Player;
  */
 public class FireArrow extends Spell {
 
+    private FireArrow(Player player) {
+        super(player);
+    }
+
     public static void perform(Player player, LivingEntity entity) {
         if (Spell.canPerform(player, BonusSpell.FEUERPFEILE)) {
             entity.setFireTicks(40);

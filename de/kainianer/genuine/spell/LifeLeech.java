@@ -32,6 +32,10 @@ import org.bukkit.entity.Player;
  */
 public class LifeLeech extends Spell {
 
+    private LifeLeech(Player player) {
+        super(player);
+    }
+
     public static void perform(Player player, int damage) {
         if (Spell.canPerform(player, BonusSpell.LEBENSRAUB)) {
             player.setHealth(player.getHealth() + damage);

@@ -34,12 +34,16 @@ import org.bukkit.potion.PotionEffectType;
  * @author kainianer
  */
 public class Weakness extends Spell {
-    
+
+    private Weakness(Player player) {
+        super(player);
+    }
+
     public static void perform(Player player, LivingEntity ent) {
         if (Spell.canPerform(player, BonusSpell.SCHWÄCHE)) {
             ent.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 40, 1));
             Spell.removeHungerFromPlayer(player, BonusSpell.SCHWÄCHE);
         }
     }
-    
+
 }

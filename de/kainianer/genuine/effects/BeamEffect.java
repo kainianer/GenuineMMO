@@ -23,7 +23,7 @@
  */
 package de.kainianer.genuine.effects;
 
-import de.kainianer.genuine.Main;
+import de.kainianer.genuine.MainMMO;
 import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.EffectType;
 import de.slikey.effectlib.effect.LineEffect;
@@ -37,7 +37,7 @@ import org.bukkit.entity.Entity;
 public class BeamEffect extends CustomEffect {
 
     public BeamEffect() {
-        super(new CustomLineEffect(new EffectManager(Main.getEffectLib())));
+        super(new CustomLineEffect(new EffectManager(MainMMO.getEffectLib())));
         this.getEffect().type = EffectType.REPEATING;
     }
 

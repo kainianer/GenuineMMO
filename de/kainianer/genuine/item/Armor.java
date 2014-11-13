@@ -23,6 +23,7 @@
  */
 package de.kainianer.genuine.item;
 
+import de.kainianer.genuine.item.Stat.StatType;
 import java.util.List;
 import org.bukkit.Material;
 
@@ -34,6 +35,16 @@ public class Armor extends CustomItem {
 
     public Armor(Material mat, String name, Rarity rarity, List<Stat> stats, String lore) {
         super(mat, name, rarity, stats, lore);
+        this.createItemMeta();
     }
-    
+
+    public double getValueOf(StatType type) {
+        for (Stat stat : this.getStats()) {
+            if (stat.getType() == type) {
+                return stat.getValue();
+            }
+        }
+        return 0;
+    }
+
 }

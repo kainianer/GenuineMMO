@@ -23,7 +23,7 @@
  */
 package de.kainianer.genuine.events;
 
-import de.kainianer.genuine.Main;
+import de.kainianer.genuine.MainMMO;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -39,7 +39,7 @@ public class onInventoryClose implements Listener {
     public void onInventoryClose(InventoryCloseEvent event) {
         Inventory inv = event.getInventory();
         if (inv.getTitle().contains("Quiver")) {
-            Main.getInstance().getQuiverInventories().put(event.getInventory().getHolder(), inv);
+            MainMMO.getInstance().getQuiverInventories().put(event.getInventory().getHolder(), inv);
         }
     }
 

@@ -35,11 +35,14 @@ import org.bukkit.potion.PotionEffectType;
  */
 public class Slow extends Spell {
 
+    private Slow(Player player) {
+        super(player);
+    }
+
     public static void perform(Player player, LivingEntity ent) {
         if (Spell.canPerform(player, BonusSpell.VERLANGSAMUNG)) {
             ent.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 1));
             Spell.removeHungerFromPlayer(player, BonusSpell.VERLANGSAMUNG);
         }
     }
-
 }

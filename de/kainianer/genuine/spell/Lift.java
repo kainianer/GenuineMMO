@@ -33,7 +33,11 @@ import org.bukkit.util.Vector;
  * @author kainianer
  */
 public class Lift extends Spell {
-    
+
+    private Lift(Player player) {
+        super(player);
+    }
+
     public static void perform(Player player, LivingEntity ent) {
         if (Spell.canPerform(player, BonusSpell.SCHWUNG)) {
             ent.setVelocity(new Vector(0, 1, 0));
@@ -41,5 +45,5 @@ public class Lift extends Spell {
             System.out.println("PERFORMED");
         }
     }
-    
+
 }

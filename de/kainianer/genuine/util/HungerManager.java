@@ -23,7 +23,8 @@
  */
 package de.kainianer.genuine.util;
 
-import de.kainianer.genuine.Main;
+import de.kainianer.genuine.MainMMO;
+import de.kainianer.genuine.entity.MMOPlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -32,17 +33,19 @@ import org.bukkit.entity.Player;
  */
 public class HungerManager implements Runnable {
 
-    private final Main main;
+    private final MainMMO main;
 
-    public HungerManager(Main main) {
+    public HungerManager(MainMMO main) {
         this.main = main;
     }
 
     @Override
     public void run() {
         for (Player p : this.main.getServer().getOnlinePlayers()) {
+            MMOPlayer player = MMOPlayer.wrapPlayer(p);
+            int bonus = player.getBonusManaReg();
             if (p.getFoodLevel() < 19) {
-                p.setFoodLevel(p.getFoodLevel() + 1);
+                p.setFoodLevel(p.getFoodLevel() + 1 + bonus);
             } else if (p.getFoodLevel() + 1 > 20) {
                 p.setFoodLevel(20);
             }

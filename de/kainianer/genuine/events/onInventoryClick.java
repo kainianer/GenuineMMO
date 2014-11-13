@@ -23,15 +23,19 @@
  */
 package de.kainianer.genuine.events;
 
+import de.kainianer.genuine.item.Gem;
+import de.kainianer.genuine.item.Weapon;
+import de.kainianer.genuine.util.ItemUtil;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -42,10 +46,52 @@ public class onInventoryClick implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryClick(InventoryClickEvent event) {
         Inventory inv = event.getInventory();
-        List<InventoryAction> events = new ArrayList<>();
-        events.add(InventoryAction.PLACE_ALL);
-        events.add(InventoryAction.PLACE_ONE);
-        events.add(InventoryAction.PLACE_SOME);
+        /* if (event.getInventory().getType().equals(InventoryType.BREWING)) {
+            if (event.getRawSlot() < 4) {
+                if (!ItemUtil.verifyCustomItem(event.getCursor())) {
+                    if (event.getCursor().getType() != Material.AIR && !event.getCursor().getType().equals(Material.EMERALD)) {
+                        event.setCancelled(true);
+
+                    } else {
+                        event.setCursor(event.getInventory().getItem(event.getRawSlot()));
+                        event.getInventory().setItem(event.getRawSlot(), new ItemStack(Material.AIR));
+                        event.setCancelled(true);
+                    }
+                } else if (event.getRawSlot() == 3) {
+                    if (ItemUtil.verifyCustomItem(event.getInventory().getItem(event.getRawSlot()))) {
+                        Weapon w = ItemUtil.getCustomWeaponItem(event.getInventory().getItem(3));
+                        for (int i = 0; i < 3; i++) {
+                            if (event.getInventory().getItem(i).getType() == Material.INK_SACK) {
+                                Gem gem = ItemUtil.getCustomGemItem(event.getInventory().getItem(i));
+                                if (!w.hasMaxEnchantments()) {
+                                    w.addBonusSpell(gem.getBonusSpell());
+                                    event.getInventory().setItem(i, new ItemStack(Material.AIR));
+                                }
+                            }
+                        }
+                    }
+                    event.getInventory().setItem(3, event.getCursor());
+                    event.setCursor(new ItemStack(Material.AIR));
+                    event.setCancelled(true);
+                } else if (event.getCursor().getType().equals(Material.EMERALD)) {
+                    if (event.getRawSlot() < 3) {
+                        event.getInventory().setItem(event.getRawSlot(), event.getCursor());
+                        event.setCursor(new ItemStack(Material.AIR));
+                        event.setCancelled(true);
+                    } else {
+                        event.setCancelled(true);
+                    }
+                } else {
+                    event.setCancelled(true);
+                }
+            } else {
+                if (event.isShiftClick() && !ItemUtil.verifyCustomItem(event.getCursor())) {
+                    event.setCancelled(true);
+                }
+            }
+        } */
+
+        //Quiverhandling
         if (inv.getName().contains("Quiver")) {
             if (event.getRawSlot() < 9) {
                 if (event.getCursor().getType() != Material.ARROW) {

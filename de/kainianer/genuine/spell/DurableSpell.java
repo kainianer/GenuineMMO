@@ -23,6 +23,8 @@
  */
 package de.kainianer.genuine.spell;
 
+import org.bukkit.entity.Player;
+
 /**
  *
  * @author kainianer
@@ -31,9 +33,14 @@ public abstract class DurableSpell extends Spell {
 
     private int lived;
     private final int length;
+    private final double multi;
+    private final Player source;
 
-    public DurableSpell(int length) {
+    public DurableSpell(int length, double multi, Player player) {
+        super(player);
         this.length = length;
+        this.multi = multi;
+        this.source = player;
     }
 
     /**
@@ -44,7 +51,7 @@ public abstract class DurableSpell extends Spell {
     }
 
     public boolean isExpired() {
-        return this.lived >= this.length;
+        return this.getLived() >= this.getLength();
     }
 
     public void increaseLived() {
@@ -53,9 +60,30 @@ public abstract class DurableSpell extends Spell {
     }
 
     public abstract void tick();
-    
+
     public abstract void start();
 
     public abstract void cancel();
+
+    /**
+     * @return the lived
+     */
+    public int getLived() {
+        return lived;
+    }
+
+    /**
+     * @return the multi
+     */
+    public double getMulti() {
+        return multi;
+    }
+
+    /**
+     * @return the source
+     */
+    public Player getSource() {
+        return source;
+    }
 
 }

@@ -31,16 +31,18 @@ import org.bukkit.ChatColor;
  */
 public enum Rarity {
 
-    HÄUFIG(ChatColor.GRAY),
-    NORMAL(ChatColor.WHITE),
-    SELTEN(ChatColor.BLUE),
-    EPISCH(ChatColor.DARK_PURPLE),
-    LEGENDÄR(ChatColor.GOLD);
+    HÄUFIG(ChatColor.GRAY, 0),
+    NORMAL(ChatColor.WHITE, 0),
+    SELTEN(ChatColor.BLUE, 1),
+    EPISCH(ChatColor.DARK_PURPLE, 2),
+    LEGENDÄR(ChatColor.GOLD, 3);
 
     public ChatColor color;
-
-    private Rarity(ChatColor color) {
+    public int enchantMax;
+    
+    private Rarity(ChatColor color, int enchantMax) {
         this.color = color;
+        this.enchantMax = enchantMax;
     }
 
     public ChatColor getChatColor() {
@@ -53,4 +55,24 @@ public enum Rarity {
         return c + str.substring(1, str.length());
     }
 
+    public static double getDropChancePercent(Rarity rar) {
+        switch (rar) {
+            case HÄUFIG:
+                return 0.15;
+            case NORMAL:
+                return 0.08;
+            case SELTEN:
+                return 0.02;
+            case EPISCH:
+                return 0.002;
+            case LEGENDÄR:
+                return 0.00005;
+            default:
+                return 0;
+        }
+    }
+    
+    public int getMaxEnchantments() {
+        return this.enchantMax;
+    }
 }

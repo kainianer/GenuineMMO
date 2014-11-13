@@ -23,7 +23,7 @@
  */
 package de.kainianer.genuine.spell;
 
-import de.kainianer.genuine.Main;
+import de.kainianer.genuine.util.SpellManager;
 import de.kainianer.genuine.item.BonusSpell;
 import de.kainianer.genuine.util.SpellUtil;
 import java.util.ArrayList;
@@ -42,8 +42,8 @@ public class Root extends DurableSpell {
     private List<Block> blockList;
     private final List<Material> oldMaterial = new ArrayList<>();
 
-    public Root(int length, Location loc) {
-        super(length);
+    private Root(int length, Location loc, Player player) {
+        super(length, 0, player);
         this.blockList = SpellUtil.getBlocksInRadius(loc, 1);
         for (int i = 0; i < blockList.size(); i++) {
             oldMaterial.add(i, blockList.get(i).getType());
@@ -67,7 +67,7 @@ public class Root extends DurableSpell {
 
     public static void perform(Player player, Location loc) {
         if (Spell.canPerform(player, BonusSpell.FESSELN)) {
-            Root root = new Root(2, loc);
+            Root root = new Root(2, loc, player);
             root.start();
             Spell.removeHungerFromPlayer(player, BonusSpell.FESSELN);
         }

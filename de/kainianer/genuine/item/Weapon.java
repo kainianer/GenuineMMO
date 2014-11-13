@@ -23,6 +23,7 @@
  */
 package de.kainianer.genuine.item;
 
+import de.kainianer.genuine.item.Stat.StatType;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.ChatColor;
@@ -35,11 +36,19 @@ import org.bukkit.inventory.meta.ItemMeta;
 public final class Weapon extends CustomItem {
 
     private final List<BonusSpell> bonusSpells;
+    private double damage;
+    private final WeaponType type;
 
     public Weapon(WeaponType type, String name, Rarity rarity, List<Stat> stats, List<BonusSpell> bonusSpells, String lore) {
         super(type.getMaterial(), name, rarity, stats, lore);
+        this.type = type;
         this.bonusSpells = bonusSpells;
         this.createItemMeta();
+        for (Stat stat : stats) {
+            if (stat.getType().equals(StatType.SCHADEN)) {
+                this.damage = stat.getValue();
+            }
+        }
     }
 
     public List<BonusSpell> getBonusSpells() {
@@ -80,5 +89,27 @@ public final class Weapon extends CustomItem {
             cost += spell.getHungerCost();
         }
         return cost;
+    }
+
+    public double getDamage() {
+        return this.damage / 10;
+    }
+
+    public boolean hasSpell(BonusSpell spell) {
+        return this.getBonusSpells().contains(spell);
+    }
+
+    public WeaponType getWeaponType() {
+        return this.type;
+    }
+
+    public boolean hasMaxEnchantments() {
+        return this.getRarity().getMaxEnchantments() < this.getBonusSpells().size();
+    }
+
+    public void addBonusSpell(BonusSpell spell) {
+        if (!this.hasMaxEnchantments()) {
+            this.getBonusSpells().add(spell);
+        }
     }
 }

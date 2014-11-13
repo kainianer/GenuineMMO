@@ -26,6 +26,7 @@ package de.kainianer.genuine.spell;
 import de.kainianer.genuine.item.BonusSpell;
 import de.slikey.effectlib.util.VectorUtils;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
 
 /**
@@ -34,6 +35,10 @@ import org.bukkit.entity.Player;
  */
 public class ClusterArrow extends Spell {
 
+    private ClusterArrow(Player player) {
+        super(player);
+    }
+
     public static void perform(Player player, Arrow ar) {
         if (Spell.canPerform(player, BonusSpell.SPLITTERPFEIL)) {
             player.launchProjectile(Arrow.class, VectorUtils.rotateAroundAxisY(ar.getVelocity(), -0.1f));
@@ -41,5 +46,4 @@ public class ClusterArrow extends Spell {
             Spell.removeHungerFromPlayer(player, BonusSpell.SPLITTERPFEIL);
         }
     }
-
 }

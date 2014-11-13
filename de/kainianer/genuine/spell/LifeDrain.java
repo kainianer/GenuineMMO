@@ -23,9 +23,11 @@
  */
 package de.kainianer.genuine.spell;
 
+import de.kainianer.genuine.util.SpellManager;
 import de.kainianer.genuine.effects.CustomLineEffect;
-import de.kainianer.genuine.Main;
+import de.kainianer.genuine.MainMMO;
 import de.kainianer.genuine.item.BonusSpell;
+import de.kainianer.genuine.util.TargetBarManager;
 import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.util.ParticleEffect;
 import org.bukkit.entity.LivingEntity;
@@ -41,11 +43,11 @@ public class LifeDrain extends DurableSpell {
     private LivingEntity target;
     private Player player;
 
-    public LifeDrain(int length, Player player, LivingEntity target) {
-        super(4);
+    private LifeDrain(int length, double multi, Player player, LivingEntity target) {
+        super(length, multi, player);
         this.target = target;
         this.player = player;
-        effect = new CustomLineEffect(new EffectManager(Main.getEffectLib()));
+        effect = new CustomLineEffect(new EffectManager(MainMMO.getEffectLib()));
         effect.particle = ParticleEffect.RED_DUST;
         effect.locationUpdateInterval = 1;
         effect.particles = 16;
@@ -74,15 +76,16 @@ public class LifeDrain extends DurableSpell {
             } else {
                 player.setHealth(20d);
             }
-            this.target.damage(3);
+            this.target.damage(this.getMulti());
+            TargetBarManager.updateForEntity(this.target, 0);
         } else {
             this.effect.cancel();
         }
     }
 
-    public static void perform(Player player, LivingEntity ent) {
+    public static void perform(Player player, double multi, LivingEntity ent) {
         if (Spell.canPerform(player, BonusSpell.AUSSAUGEN)) {
-            LifeDrain drain = new LifeDrain(4, player, ent);
+            LifeDrain drain = new LifeDrain(4, multi, player, ent);
             drain.start();
             Spell.removeHungerFromPlayer(player, BonusSpell.AUSSAUGEN);
         }

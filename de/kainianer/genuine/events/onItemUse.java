@@ -23,7 +23,7 @@
  */
 package de.kainianer.genuine.events;
 
-import de.kainianer.genuine.Main;
+import de.kainianer.genuine.MainMMO;
 import de.kainianer.genuine.item.BonusSpell;
 import de.kainianer.genuine.item.Weapon;
 import de.kainianer.genuine.spell.FireBall;
@@ -31,6 +31,7 @@ import de.kainianer.genuine.spell.IceLance;
 import de.kainianer.genuine.spell.LifeDrain;
 import de.kainianer.genuine.spell.Lift;
 import de.kainianer.genuine.util.SpellUtil;
+import de.kainianer.genuine.util.TargetBarManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -55,30 +56,29 @@ public class onItemUse implements Listener {
         if (!event.getPlayer().getItemInHand().getType().equals(Material.AIR)) {
             ItemStack stack = event.getPlayer().getItemInHand();
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-
                 if (stack.hasItemMeta()) {
                     if (stack.getItemMeta().hasDisplayName()) {
                         if (stack.getItemMeta().getDisplayName().contains("Köcher")) {
-                            if (!Main.getInstance().getQuiverInventories().containsKey(event.getPlayer())) {
+                            if (!MainMMO.getInstance().getQuiverInventories().containsKey(event.getPlayer())) {
                                 Player player = event.getPlayer();
                                 Inventory inv = Bukkit.getServer().createInventory(player, 9, ChatColor.BLACK + "Köcher");
                                 player.openInventory(inv);
                                 event.setCancelled(true);
                             } else {
-                                event.getPlayer().openInventory(Main.getInstance().getQuiverInventories().get(event.getPlayer()));
+                                event.getPlayer().openInventory(MainMMO.getInstance().getQuiverInventories().get(event.getPlayer()));
                             }
                         }
                     }
                 }
             } else if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) {
-                if (stack.getItemMeta().hasDisplayName() && Main.getInstance().getItemList().containsKey(stack.getItemMeta().getDisplayName()) && stack.getType().equals(Material.BLAZE_ROD)) {
-                    Weapon w = (Weapon) Main.getInstance().getItemList().get(stack.getItemMeta().getDisplayName());
+                if (stack.getItemMeta().hasDisplayName() && MainMMO.getInstance().getItemList().containsKey(stack.getItemMeta().getDisplayName()) && stack.getType().equals(Material.BLAZE_ROD)) {
+                    Weapon w = (Weapon) MainMMO.getInstance().getItemList().get(stack.getItemMeta().getDisplayName());
                     Player player = event.getPlayer();
                     if (w.getBonusSpells().contains(BonusSpell.EISLANZE)) {
-                        IceLance.perform(player);
+                        IceLance.perform(player, w.getDamage());
                     }
                     if (w.getBonusSpells().contains(BonusSpell.FEUERBALL)) {
-                        FireBall.perform(player);
+                        FireBall.perform(player, w.getDamage());
                     }
                     if (w.getBonusSpells().contains(BonusSpell.SCHWUNG)) {
                         Entity ent = SpellUtil.getTargetEntity(event.getPlayer());
@@ -89,8 +89,12 @@ public class onItemUse implements Listener {
                     if (w.getBonusSpells().contains(BonusSpell.AUSSAUGEN)) {
                         Entity ent = SpellUtil.getTargetEntity(player);
                         if (ent != null && ent instanceof LivingEntity) {
-                            LifeDrain.perform(player, (LivingEntity) ent);
+                            LifeDrain.perform(player, w.getDamage(), (LivingEntity) ent);
                         }
+                    }
+                    Entity ent = SpellUtil.getTargetEntity(player);
+                    if (ent != null && ent instanceof LivingEntity) {
+                        TargetBarManager.getInstance().setTargetOfPlayer(player, (LivingEntity) ent);
                     }
                 }
             }

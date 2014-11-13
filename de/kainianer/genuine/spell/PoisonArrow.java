@@ -26,8 +26,6 @@ package de.kainianer.genuine.spell;
 import de.kainianer.genuine.item.BonusSpell;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 /**
  *
@@ -35,9 +33,14 @@ import org.bukkit.potion.PotionEffectType;
  */
 public class PoisonArrow extends Spell {
 
-    public static void perform(Player player, LivingEntity ent) {
+    private PoisonArrow(Player player) {
+        super(player);
+    }
+
+    public static void perform(Player player, double damage, LivingEntity ent) {
         if (Spell.canPerform(player, BonusSpell.GIFTPFEIL)) {
-            ent.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 80, 1));
+            Poison ps = new Poison(4, ent, damage, player);
+            ps.start();
             Spell.removeHungerFromPlayer(player, BonusSpell.GIFTPFEIL);
         }
     }

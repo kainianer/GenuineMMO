@@ -34,9 +34,13 @@ import org.bukkit.potion.PotionEffectType;
  */
 public class ConcussiveShot extends Spell {
 
+    private ConcussiveShot(Player player) {
+        super(player);
+    }
+
     public static void perform(Player player, Player target) {
         if (Spell.canPerform(player, BonusSpell.VERWIRRUNG)) {
-            target.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 200,1));
+            target.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 200, 1));
             Spell.removeHungerFromPlayer(player, BonusSpell.VERWIRRUNG);
         }
     }

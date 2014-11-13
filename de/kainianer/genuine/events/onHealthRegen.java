@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2014 kainianer.
@@ -23,23 +23,28 @@
  */
 package de.kainianer.genuine.events;
 
-import de.kainianer.genuine.MainMMO;
 import de.kainianer.genuine.entity.MMOPlayer;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 
 /**
  *
  * @author kainianer
  */
-public class onJoin implements Listener {
+public class onHealthRegen implements Listener {
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        MainMMO.getInstance().getPlayers().put(event.getPlayer().getUniqueId(), new MMOPlayer(event.getPlayer()));
-        MMOPlayer p = MMOPlayer.wrapPlayer(event.getPlayer());
-        p.updateMaxHelath();
+    public void onHealthRegen(EntityRegainHealthEvent event) {
+        Entity ent = event.getEntity();
+        if (ent instanceof Player) {
+            Player p = (Player) ent;
+            MMOPlayer player = MMOPlayer.wrapPlayer(p);
+            event.setAmount(event.getAmount() + player.getBonusHealth());
+        }
+        System.out.println("regen");
     }
 
 }

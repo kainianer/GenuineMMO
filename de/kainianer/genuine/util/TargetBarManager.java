@@ -23,7 +23,7 @@
  */
 package de.kainianer.genuine.util;
 
-import de.kainianer.genuine.Main;
+import de.kainianer.genuine.MainMMO;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +54,7 @@ public class TargetBarManager {
     }
 
     public static TargetBarManager getInstance() {
-        return Main.getInstance().getTargetBars();
+        return MainMMO.getInstance().getTargetBars();
     }
 
     public LivingEntity getTargetOfPlayer(Player player) {
@@ -78,17 +78,12 @@ public class TargetBarManager {
         float percent = ((float) entity.getHealth() - (float) (damage)) / ((float) (((Damageable) entity).getMaxHealth()));
         String name = entity instanceof Player ? ((Player) entity).getName() : entity.getCustomName();
         for (Player p : this.getPlayersTargettingEntity(entity)) {
-            if (percent > 0) {
-                BarAPI.setMessage(p, name, percent * 100);
+            if (!BarAPI.hasBar(p) && percent >= 0) {
+                BarAPI.setMessage(p, name, percent * 100f);
             } else {
-                BarAPI.setMessage(p, name, 0f);
-                this.toRemove.put(entity, System.currentTimeMillis() + 20);
-                Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(this.plugin, new Runnable() {
-                    @Override
-                    public void run() {
-                        Main.getInstance().getTargetBars().delayedRemove();
-                    }
-                }, 20L);
+                if (percent >= 0) {
+                    BarAPI.setHealth(p, percent * 100f);
+                }
             }
         }
     }

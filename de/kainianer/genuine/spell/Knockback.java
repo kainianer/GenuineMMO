@@ -33,6 +33,10 @@ import org.bukkit.entity.Player;
  */
 public class Knockback extends Spell {
 
+    private Knockback(Player player) {
+        super(player);
+    }
+
     public static void perform(Player player, Entity ent) {
         if (Spell.canPerform(player, BonusSpell.RÜCKSTOß)) {
             ent.setVelocity(ent.getLocation().getDirection().multiply(-1.25));

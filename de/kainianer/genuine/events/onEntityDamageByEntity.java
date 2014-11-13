@@ -23,14 +23,15 @@
  */
 package de.kainianer.genuine.events;
 
-import de.kainianer.genuine.Main;
 import de.kainianer.genuine.item.BonusSpell;
 import de.kainianer.genuine.item.Weapon;
+import de.kainianer.genuine.item.WeaponType;
+import de.kainianer.genuine.spell.ExplosiveArrow;
 import de.kainianer.genuine.spell.PoisonArrow;
-import de.kainianer.genuine.spell.Root;
+import de.kainianer.genuine.util.ItemUtil;
 import de.kainianer.genuine.util.TargetBarManager;
-import org.bukkit.Material;
-import org.bukkit.entity.Arrow;
+import net.minecraft.server.v1_7_R4.Explosion;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -38,6 +39,8 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 /**
  *
@@ -48,36 +51,31 @@ public class onEntityDamageByEntity implements Listener {
     @EventHandler
     public void onEntityDamageLivingEntity(EntityDamageByEntityEvent event) {
         LivingEntity target = (LivingEntity) event.getEntity();
-
-        if (event.getDamager() instanceof Projectile) {
-            Projectile proj = (Projectile) event.getDamager();
-            if (proj.getShooter() instanceof Player) {
-                Player player = (Player) proj.getShooter();
-                TargetBarManager.getInstance().setTargetOfPlayer(player, (LivingEntity) event.getEntity());
-                if (player.getItemInHand().getType() == Material.BOW && proj instanceof Arrow) {
-                    if (player.getItemInHand().getItemMeta().hasDisplayName()) {
-                        if (Main.getInstance().getItemList().containsKey(player.getItemInHand().getItemMeta().getDisplayName())) {
-                            Weapon w = (Weapon) Main.getInstance().getItemList().get(player.getItemInHand().getItemMeta().getDisplayName());
-                            if (w.getBonusSpells().contains(BonusSpell.GIFTPFEIL)) {
-                                if (w.getBonusSpells().contains(BonusSpell.EXPLOSIVSCHUSS)) {
-                                    for (Entity ent : target.getNearbyEntities(2, 2, 2)) {
-                                        if (ent instanceof LivingEntity) {
-                                            PoisonArrow.perform(player, (LivingEntity)ent);
-                                        }
-                                    }
-                                } else {
-                                    PoisonArrow.perform(player, target);
-                                }
-                            }
-                            if(w.getBonusSpells().contains(BonusSpell.FESSELN)) {
-                                Root.perform(player, target.getLocation());
+        Player player = event.getDamager() instanceof Projectile ? (Player) ((Projectile) event.getDamager()).getShooter() : (Player) event.getDamager();
+        if (player != null && ItemUtil.verifyCustomItem(player.getItemInHand())) {
+            Weapon w = ItemUtil.getCustomWeaponItem(player.getItemInHand());
+            if (w.getWeaponType() != WeaponType.WAND) {
+                event.setDamage(w.getDamage());
+                if (w.hasSpell(BonusSpell.EXPLOSIVSCHUSS)) {
+                    ExplosiveArrow.perform(player, w.getDamage(), target);
+                    if (w.hasSpell(BonusSpell.GIFTPFEIL)) {
+                        for (Entity entity : event.getEntity().getNearbyEntities(1f, 1f, 1f)) {
+                            if (entity instanceof LivingEntity && entity instanceof Player && !((Player) entity).getUniqueId().equals(player.getUniqueId())) {
+                                PoisonArrow.perform(player, w.getDamage(), (LivingEntity) entity);
                             }
                         }
                     }
                 }
+                if (w.hasSpell(BonusSpell.GIFTPFEIL) && !w.hasSpell(BonusSpell.EXPLOSIVSCHUSS)) {
+                    PoisonArrow.perform(player, w.getDamage(), target);
+                }
+            } else {
+                event.setDamage(1);
             }
-        } else if (event.getDamager() instanceof Player) {
-            TargetBarManager.getInstance().setTargetOfPlayer((Player) event.getDamager(), (LivingEntity) event.getEntity());
+        }
+        if (event.getEntity() != null) {
+            TargetBarManager.getInstance().setTargetOfPlayer(player, target);
+            TargetBarManager.updateForEntity(target, event.getFinalDamage());
         }
     }
 }

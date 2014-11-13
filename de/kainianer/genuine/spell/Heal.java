@@ -31,8 +31,12 @@ import org.bukkit.entity.Player;
  */
 public class Heal extends Spell {
 
+    private Heal(Player player) {
+        super(player);
+    }
+
     public static void perform(Player player, Player target) {
-        
+
     }
 
 }

@@ -34,11 +34,14 @@ import org.bukkit.potion.PotionEffectType;
  */
 public class Blindness extends Spell {
 
+    private Blindness(Player player) {
+        super(player);
+    }
+
     public static void perform(Player player, Player target) {
         if (Spell.canPerform(player, BonusSpell.BLINDHEIT)) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 40, 1));
             Spell.removeHungerFromPlayer(player, BonusSpell.BLINDHEIT);
         }
     }
-
 }

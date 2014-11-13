@@ -23,9 +23,10 @@
  */
 package de.kainianer.genuine.spell;
 
-import de.kainianer.genuine.Main;
+import de.kainianer.genuine.MainMMO;
 import de.kainianer.genuine.item.BonusSpell;
 import de.kainianer.genuine.util.SpellUtil;
+import de.kainianer.genuine.util.TargetBarManager;
 import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.effect.LineEffect;
 import de.slikey.effectlib.util.ParticleEffect;
@@ -40,9 +41,13 @@ import org.bukkit.entity.Player;
  */
 public class IceLance extends Spell {
 
-    public static void perform(Player player) {
+    private IceLance(Player player) {
+        super(player);
+    }
+
+    public static void perform(Player player, double damage) {
         if (Spell.canPerform(player, BonusSpell.EISLANZE)) {
-            LineEffect effect = new LineEffect(new EffectManager(Main.getEffectLib()));
+            LineEffect effect = new LineEffect(new EffectManager(MainMMO.getEffectLib()));
             effect.particle = ParticleEffect.SMOKE;
             Random ran = new Random();
             effect.particles = ran.nextInt((7 - 3) + 1) + 3;
@@ -57,9 +62,11 @@ public class IceLance extends Spell {
             }
             if (ent instanceof LivingEntity && distance <= 16 && distance >= 0) {
                 LivingEntity le = (LivingEntity) ent;
-                le.damage(4d);
+                le.damage(damage);
+                TargetBarManager.updateForEntity(le, 0);
             }
             Spell.removeHungerFromPlayer(player, BonusSpell.EISLANZE);
         }
     }
+
 }

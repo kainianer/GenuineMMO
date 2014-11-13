@@ -24,7 +24,7 @@
 package de.kainianer.genuine.events;
 
 import de.kainianer.genuine.effects.LegendaryDropEffect;
-import de.kainianer.genuine.Main;
+import de.kainianer.genuine.MainMMO;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -41,9 +41,8 @@ public class onItemSpawn implements Listener {
         if (event.getEntity().getItemStack().hasItemMeta()) {
             if (event.getEntity().getItemStack().getItemMeta().hasDisplayName()) {
                 if (event.getEntity().getItemStack().getItemMeta().getDisplayName().contains(ChatColor.GOLD + "" + ChatColor.BOLD)) {
-                    System.out.println("FUNZT");
                     LegendaryDropEffect legendaryDropEffect = new LegendaryDropEffect(event.getEntity());
-                    Main.getInstance().getLegendaryOnGroundList().put(event.getEntity(), legendaryDropEffect);
+                    MainMMO.getInstance().getLegendaryOnGroundList().put(event.getEntity(), legendaryDropEffect);
                 }
             }
         }

@@ -23,7 +23,7 @@
  */
 package de.kainianer.genuine.effects;
 
-import de.kainianer.genuine.Main;
+import de.kainianer.genuine.MainMMO;
 import de.slikey.effectlib.EffectManager;
 import de.slikey.effectlib.effect.CircleEffect;
 import de.slikey.effectlib.util.ParticleEffect;
@@ -35,7 +35,7 @@ import de.slikey.effectlib.util.ParticleEffect;
 public class OrbitEffect extends CustomEffect {
 
     public OrbitEffect() {
-        super(new CircleEffect(new EffectManager(Main.getEffectLib())));
+        super(new CircleEffect(new EffectManager(MainMMO.getEffectLib())));
         ((CircleEffect) this.getEffect()).radius = 1f;
         ((CircleEffect) this.getEffect()).angularVelocityX = 0;
         ((CircleEffect) this.getEffect()).angularVelocityZ = 0;

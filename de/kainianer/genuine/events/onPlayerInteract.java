@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2014 kainianer.
@@ -23,23 +23,30 @@
  */
 package de.kainianer.genuine.events;
 
-import de.kainianer.genuine.MainMMO;
-import de.kainianer.genuine.entity.MMOPlayer;
+import de.kainianer.cauldron.FuseCauldron;
+import de.kainianer.genuine.util.ItemUtil;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 /**
  *
  * @author kainianer
  */
-public class onJoin implements Listener {
+public class onPlayerInteract implements Listener {
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        MainMMO.getInstance().getPlayers().put(event.getPlayer().getUniqueId(), new MMOPlayer(event.getPlayer()));
-        MMOPlayer p = MMOPlayer.wrapPlayer(event.getPlayer());
-        p.updateMaxHelath();
+    public void onPlayerInteractEvent(PlayerInteractEvent event) {
+        Block b = event.getClickedBlock();
+
+        if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK) && b.getType().equals(Material.CAULDRON)) {
+            if (ItemUtil.verifyCustomItem(event.getPlayer().getItemInHand())) {
+                FuseCauldron.openFuseCauldronInventory(event.getPlayer(), event.getPlayer().getItemInHand());
+            }
+        }
     }
 
 }

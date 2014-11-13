@@ -48,12 +48,10 @@ public class Stat {
 
     private final StatType type;
     private final double value;
-    private final boolean percent;
 
-    public Stat(StatType type, double value, boolean percent) {
+    public Stat(StatType type, double value) {
         this.type = type;
         this.value = value;
-        this.percent = percent;
     }
 
     public String getStatName() {
@@ -84,19 +82,14 @@ public class Stat {
                 return ChatColor.GREEN + "+" + String.valueOf(this.value);
             case LEBENSRAU:
                 return ChatColor.GREEN + "+" + String.valueOf(this.value);
-        }
-        if (this.percent) {
-            return String.valueOf(this.value) + "%";
-        } else {
-            return String.valueOf(this.value);
+            case LEVEL:
+                return String.valueOf((int) this.getValue());
+            case ERFAHRUNG:
+                return String.valueOf((int) this.getValue()) + "%";
+            case ZAUBERSCH:
+                return String.valueOf((int) this.getValue()) + "%";
+            default:
+                return String.valueOf(this.value);
         }
     }
-
-    /**
-     * @return the percent
-     */
-    public boolean isPercent() {
-        return percent;
-    }
-
 }

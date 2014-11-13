@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2014 kainianer.
@@ -21,25 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.kainianer.genuine.events;
+package de.kainianer.cauldron;
 
-import de.kainianer.genuine.MainMMO;
-import de.kainianer.genuine.entity.MMOPlayer;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
  * @author kainianer
  */
-public class onJoin implements Listener {
+public class FuseCauldron {
 
-    @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        MainMMO.getInstance().getPlayers().put(event.getPlayer().getUniqueId(), new MMOPlayer(event.getPlayer()));
-        MMOPlayer p = MMOPlayer.wrapPlayer(event.getPlayer());
-        p.updateMaxHelath();
+    private Location loc;
+
+    public FuseCauldron(Location loc) {
+        this.loc = loc;
+    }
+
+    public FuseCauldron() {
+    }
+
+    public Location getLocation() {
+        return this.loc;
+    }
+
+    public static void openFuseCauldronInventory(Player player, ItemStack item) {
+        Inventory inv = Bukkit.getServer().createInventory(player, InventoryType.BREWING, ChatColor.DARK_PURPLE + "Fusionskessel");
+        player.openInventory(inv);
     }
 
 }

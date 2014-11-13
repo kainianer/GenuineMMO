@@ -24,7 +24,7 @@
 package de.kainianer.genuine.events;
 
 import de.kainianer.genuine.effects.CustomEffect;
-import de.kainianer.genuine.Main;
+import de.kainianer.genuine.MainMMO;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerPickupItemEvent;
@@ -37,10 +37,10 @@ public class onPlayerPickupItem implements Listener {
 
     @EventHandler
     public void onItemPickUp(PlayerPickupItemEvent event) {
-        if (Main.getInstance().getLegendaryOnGroundList().containsKey(event.getItem())) {
-            CustomEffect effect = Main.getInstance().getLegendaryOnGroundList().get(event.getItem());
+        if (MainMMO.getInstance().getLegendaryOnGroundList().containsKey(event.getItem())) {
+            CustomEffect effect = MainMMO.getInstance().getLegendaryOnGroundList().get(event.getItem());
             effect.cancel();
-            Main.getEffectLib().getEffectManagers().remove(effect);
+            MainMMO.getEffectLib().getEffectManagers().remove(effect);
         }
     }
 }

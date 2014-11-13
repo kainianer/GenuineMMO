@@ -24,19 +24,124 @@
 package de.kainianer.genuine.entity;
 
 import de.kainianer.genuine.classes.MMOClass;
+import de.kainianer.genuine.item.Armor;
+import de.kainianer.genuine.item.Stat.StatType;
+import de.kainianer.genuine.util.ItemUtil;
+import java.util.UUID;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
  * @author kainianer
  */
 public class MMOPlayer {
-    
+
+    private Player player;
     private String playerName;
+    private UUID id;
     private MMOClass mclass;
     private int totalExp;
-    
-    public MMOPlayer(String name) {
-        
+
+    public MMOPlayer(Player player) {
+        this.player = player;
+        this.id = player.getUniqueId();
+        this.playerName = player.getDisplayName();
+        this.mclass = MMOClass.HUNTER;
+        this.totalExp = player.getTotalExperience();
     }
-    
+
+    /**
+     * @return the playerName
+     */
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    /**
+     * @return the mclass
+     */
+    public MMOClass getMclass() {
+        return mclass;
+    }
+
+    /**
+     * @return the totalExp
+     */
+    public int getTotalExp() {
+        return totalExp;
+    }
+
+    /**
+     * @return the Level
+     */
+    public int getLevel() {
+        return this.player.getLevel();
+    }
+
+    public int getBonusHealReg() {
+        int i = 0;
+        for (ItemStack stack : this.player.getInventory().getArmorContents()) {
+            if (ItemUtil.verifyCustomItem(stack)) {
+                Armor armor = ItemUtil.getCustomArmorItem(stack);
+                i += armor.getValueOf(StatType.LEBENSREG);
+            }
+        }
+        return i;
+    }
+
+    public int getBonusManaReg() {
+        int i = 0;
+        for (ItemStack stack : this.player.getInventory().getArmorContents()) {
+            if (ItemUtil.verifyCustomItem(stack)) {
+                Armor armor = ItemUtil.getCustomArmorItem(stack);
+                i += armor.getValueOf(StatType.HUNGERREG);
+            }
+        }
+        return i;
+    }
+
+    public int getBonusHealth() {
+        int i = 0;
+        for (ItemStack stack : this.player.getInventory().getArmorContents()) {
+            if (ItemUtil.verifyCustomItem(stack)) {
+                Armor armor = ItemUtil.getCustomArmorItem(stack);
+                i += armor.getValueOf(StatType.LEBEN);
+            }
+        }
+        return i;
+    }
+
+    public int getBonusExperience() {
+        int i = 0;
+        for (ItemStack stack : this.player.getInventory().getArmorContents()) {
+            if (ItemUtil.verifyCustomItem(stack)) {
+                Armor armor = ItemUtil.getCustomArmorItem(stack);
+                i += armor.getValueOf(StatType.ERFAHRUNG);
+            }
+        }
+        return i;
+
+    }
+
+    public static MMOPlayer wrapPlayer(Player player) {
+        return new MMOPlayer(player);
+    }
+
+    public void updateMaxHelath() {
+        this.player.setMaxHealth(this.player.getMaxHealth() + (double) this.getBonusHealth());
+    }
+
+    public double getBonusDamage() {
+        int i = 0;
+        for (ItemStack stack : this.player.getInventory().getArmorContents()) {
+            if (ItemUtil.verifyCustomItem(stack)) {
+                Armor armor = ItemUtil.getCustomArmorItem(stack);
+                i += armor.getValueOf(StatType.ZAUBERSCH);
+            }
+        }
+        return 1 + (i / 100);
+
+    }
+
 }

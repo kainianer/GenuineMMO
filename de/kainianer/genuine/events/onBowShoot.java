@@ -23,11 +23,11 @@
  */
 package de.kainianer.genuine.events;
 
-import de.kainianer.genuine.Main;
+import de.kainianer.genuine.MainMMO;
 import de.kainianer.genuine.item.BonusSpell;
 import de.kainianer.genuine.item.Weapon;
 import de.kainianer.genuine.spell.ClusterArrow;
-import de.slikey.effectlib.util.VectorUtils;
+import de.kainianer.genuine.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
@@ -45,20 +45,17 @@ public class onBowShoot implements Listener {
     @EventHandler
     public void onBowShoot(EntityShootBowEvent event) {
         if (event.getEntity() instanceof Player) {
-            ItemStack bow = event.getBow();
-            if (bow.hasItemMeta()) {
-                if (bow.getItemMeta().hasDisplayName()) {
-                    if (Main.getInstance().getItemList().containsKey(bow.getItemMeta().getDisplayName())) {
-                        Weapon w = (Weapon) Main.getInstance().getItemList().get(bow.getItemMeta().getDisplayName());
-                        Player player = (Player) event.getEntity();
-                        System.out.println(w.getBonusSpells().contains(BonusSpell.SPLITTERPFEIL));
-                        if (w.getBonusSpells().contains(BonusSpell.SPLITTERPFEIL)) {
-                            ClusterArrow.perform(player, (Arrow) event.getProjectile());
-                        }
-                    }
+            if (ItemUtil.verifyCustomItem(event.getBow())) {
+                Weapon w = ItemUtil.getCustomWeaponItem(event.getBow());
+                Player player = (Player) event.getEntity();
+                if (w.getBonusSpells().contains(BonusSpell.SPLITTERPFEIL)) {
+                    ClusterArrow.perform(player, (Arrow) event.getProjectile());
+                }
+                if (w.hasSpell(BonusSpell.UNENDLICHKEIT)) {
+                    ((Player) event.getEntity()).getInventory().addItem(new ItemStack(Material.ARROW, 1));
                 }
             }
-            ((Player) event.getEntity()).getInventory().addItem(new ItemStack(Material.ARROW, 1));
         }
+
     }
 }

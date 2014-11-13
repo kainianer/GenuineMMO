@@ -23,7 +23,9 @@
  */
 package de.kainianer.genuine.item;
 
+import de.kainianer.genuine.MainMMO;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -36,11 +38,12 @@ import org.bukkit.inventory.meta.ItemMeta;
  * @author kainianer
  */
 public class CustomItem extends ItemStack implements ConfigurationSerializable {
+    
     private final List<Stat> stats;
     private final String name;
     private final Rarity rarity;
     private String lore;
-
+    
     CustomItem(Material mat, String name, Rarity rarity, List<Stat> stats, String lore) {
         super(mat);
         this.stats = stats;
@@ -77,9 +80,9 @@ public class CustomItem extends ItemStack implements ConfigurationSerializable {
      * @return the rarity
      */
     public Rarity getRarity() {
-        return rarity;
+        return this.rarity;
     }
-
+    
     public void createItemMeta() {
         ItemMeta data = this.getItemMeta();
         List<String> itemLore = new ArrayList<>();
@@ -102,19 +105,9 @@ public class CustomItem extends ItemStack implements ConfigurationSerializable {
     }
 
     /**
-     * @return return the item lore capped to 4 word per row
+     * @return returns the lore split with \n
      */
     public List<String> getLoreAsList() {
-        List<String> list = new ArrayList<>();
-        String[] string = this.getLore().split(" ");
-        String str = "";
-        for (String st : string) {
-            str += st + " ";
-            if (str.split(" ").length == 4) {
-                list.add(str);
-                str = "";
-            }
-        }
-        return list;
+        return Arrays.asList(this.lore.split("\n#"));
     }
 }

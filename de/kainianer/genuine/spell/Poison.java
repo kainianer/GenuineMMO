@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2014 kainianer.
@@ -21,25 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.kainianer.genuine.events;
+package de.kainianer.genuine.spell;
 
-import de.kainianer.genuine.MainMMO;
-import de.kainianer.genuine.entity.MMOPlayer;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import de.kainianer.genuine.util.SpellManager;
+import de.kainianer.genuine.util.TargetBarManager;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 
 /**
  *
  * @author kainianer
  */
-public class onJoin implements Listener {
+public class Poison extends DurableSpell {
+    
+    private final LivingEntity entity;
 
-    @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        MainMMO.getInstance().getPlayers().put(event.getPlayer().getUniqueId(), new MMOPlayer(event.getPlayer()));
-        MMOPlayer p = MMOPlayer.wrapPlayer(event.getPlayer());
-        p.updateMaxHelath();
+    public Poison(int length, LivingEntity entity, double multi, Player source) {
+        super(length, multi, source);
+        this.entity = entity;
     }
-
+    
+    @Override
+    public void tick() {
+        this.entity.damage(this.getMulti());
+        TargetBarManager.updateForEntity(entity, 0);
+    }
+    
+    @Override
+    public void start() {
+        SpellManager.addSpell(this);
+    }
+    
+    @Override
+    public void cancel() {
+    }
+    
 }

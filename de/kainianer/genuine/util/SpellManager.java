@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2014 kainianer.
@@ -21,25 +21,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package de.kainianer.genuine.events;
+package de.kainianer.genuine.util;
 
 import de.kainianer.genuine.MainMMO;
-import de.kainianer.genuine.entity.MMOPlayer;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import de.kainianer.genuine.spell.DurableSpell;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author kainianer
  */
-public class onJoin implements Listener {
+public class SpellManager implements Runnable {
 
-    @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        MainMMO.getInstance().getPlayers().put(event.getPlayer().getUniqueId(), new MMOPlayer(event.getPlayer()));
-        MMOPlayer p = MMOPlayer.wrapPlayer(event.getPlayer());
-        p.updateMaxHelath();
+    private final List<DurableSpell> durableSpellList = new ArrayList<>();
+    private final MainMMO main;
+
+    public SpellManager(MainMMO main) {
+        this.main = main;
+    }
+
+    public List<DurableSpell> getDurableSpellList() {
+        return this.durableSpellList;
+    }
+
+    @Override
+    public void run() {
+        List<DurableSpell> toRemove = new ArrayList<>();
+        for (DurableSpell spell : this.durableSpellList) {
+            if (spell.isExpired()) {
+                spell.cancel();
+                toRemove.add(spell);
+            } else {
+                spell.increaseLived();
+            }
+        }
+        this.durableSpellList.removeAll(toRemove);
+    }
+
+    public void addSpellToManager(DurableSpell spell) {
+        this.durableSpellList.add(spell);
+    }
+
+    public static void addSpell(DurableSpell spell) {
+        MainMMO.getInstance().getSpellManager().addSpellToManager(spell);
     }
 
 }
