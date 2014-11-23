@@ -2,8 +2,10 @@ name: GenuineMMO
 author: kainianer
 webseite: http://www.kainaner.com
 version: 1.0 Alpha
-main: de.kainianer.genuine.MainMMO
+main: de.kainianer.mmo.main.Main
 depend: [WorldGuard]
 commands:
     test:
         description: test
+    group:
+        description: Functionality of a group.
